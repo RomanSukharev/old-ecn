@@ -1,0 +1,70 @@
+type Village {
+  id: ID!
+
+  title: String!
+  description: String!
+  address: String!
+  lat: Float
+  lon: Float
+  cadastrNumber: String
+  seoText: String
+  youtubeLink: String
+  tourLink: String
+
+  inCity: Boolean
+  cityDistance: Int
+  region: String
+  subRegion: String
+
+  developer: Developer @goField(forceResolver: true)
+
+  isReady: Boolean
+  readinessQuarter: QuarterEnum
+  readinessYear: Int
+
+  images: [Image!] @goField(forceResolver: true)
+  documents: [Document!] @goField(forceResolver: true)
+  projectDeclarations: [Document!] @goField(forceResolver: true)
+
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type VillageConnection {
+  totalCount: Int!
+  edges: [VillageEdge!]!
+  nodes: [Village!]!
+  pageInfo: PageInfo!
+}
+
+type VillageEdge {
+  node: Village!
+  cursor: Cursor!
+}
+
+extend type Query {
+  villages(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+  ): VillageConnection!
+
+  village(id: ID! @validate(constraint: "required,mongodb")): Village!
+}

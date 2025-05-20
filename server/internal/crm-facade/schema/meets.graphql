@@ -1,0 +1,122 @@
+enum MeetTypeEnum {
+    RENT
+    SALE
+}
+
+enum MeetStatusEnum {
+    GOING_ON_SALE
+    CANCELLED
+    FINISHED
+}
+
+enum MeetCancelReasonEnum {
+    CHANGED_MIND
+    REFUSAL
+    OWN_OPINION
+}
+
+type Meet {
+    id: ID!
+    internalNumber: Int
+    type: MeetTypeEnum
+    dealType: DealTypeEnum
+    contactType: CounterPartyTypeEnum
+    dateTime: Time
+    property: Property
+    address: String
+    comment: String
+    isOnline: Boolean
+    sellerAgent: Employee
+    sellerContact: Contact
+    sellerPhone: String
+    buyerAgent: Employee
+    buyerContact: Contact
+    buyerPhone: String
+    buyerAgency: String
+    status: MeetStatusEnum
+    cancelReason: MeetCancelReasonEnum
+    cancelReasonCustom: String
+    useDealDeposit: Boolean
+    lawer: Employee
+    accountant: Employee
+    mortgageBroker: Employee
+    useMortgage: Boolean
+    isDeleted: Boolean
+    createdAt: Time!
+    updatedAt: Time!
+}
+
+type MeetConnection {
+    totalCount: Int! 
+    edges: [MeetEdge!]!
+    nodes: [Meet!]! 
+    pageInfo: PageInfo! 
+}
+
+type MeetEdge {
+    node: Meet! 
+    cursor: Cursor! 
+}
+
+input MeetInput {
+    id: ID @validate(constraint: "omitempty,mongodb")
+    type: MeetTypeEnum @validate(constraint: "omitempty")
+    dateTime: Time @validate(constraint: "omitempty")
+    dealType: DealTypeEnum @validate(constraint: "omitempty")
+    contactType: CounterPartyTypeEnum @validate(constraint: "omitempty")
+    propertyID: ID @validate(constraint: "omitempty,mongodb")
+    address: String @validate(constraint: "omitempty")
+    comment: String @validate(constraint: "max=4096,omitempty")
+    isOnline: Boolean @validate(constraint: "omitempty,boolean")
+    sellerAgentID: ID @validate(constraint: "omitempty,mongodb")
+    sellerContactID: ID @validate(constraint: "omitempty,mongodb")
+    sellerPhone: String @validate(constraint: "omitempty,len=11,startswith=8,number")
+    buyerAgentID: ID @validate(constraint: "omitempty,mongodb")
+    buyerContactID: ID @validate(constraint: "omitempty,mongodb")
+    buyerPhone: String @validate(constraint: "omitempty,len=11,startswith=8,number")
+    buyerAgency: String @validate(constraint: "omitempty")
+    status: MeetStatusEnum @validate(constraint: "omitempty")
+    cancelReason: MeetCancelReasonEnum @validate(constraint: "omitempty")
+    cancelReasonCustom: String @validate(constraint: "omitempty")
+    useDealDeposit: Boolean @validate(constraint: "omitempty,boolean")
+    lawerID: ID @validate(constraint: "omitempty,mongodb")
+    accountantID: ID @validate(constraint: "omitempty,mongodb")
+    mortgageBrokerID: ID @validate(constraint: "omitempty,mongodb")
+    useMortgage: Boolean @validate(constraint: "omitempty,boolean")
+}
+
+input MeetFilter {
+    type: MeetTypeEnum @validate(constraint: "omitempty")
+    status: [MeetStatusEnum!] @validate(constraint: "omitempty")
+    dealType: DealTypeEnum @validate(constraint: "omitempty")
+    sellerAgent: ID @validate(constraint: "omitempty,mongodb")
+    buyerAgent: ID @validate(constraint: "omitempty,mongodb")
+    buyerContact: ID @validate(constraint: "omitempty,mongodb")
+    sellerContact: ID @validate(constraint: "omitempty,mongodb")
+    property: ID @validate(constraint: "mongodb")
+    phone: String @validate(constraint: "len=11,startswith=8,number,omitempty")
+    address: String @validate(constraint: "omitempty")
+    createdAtMin: Time @validate(constraint: "omitempty")
+    createdAtMax: Time @validate(constraint: "omitempty")
+}
+
+extend type Query {
+    meets(
+        ids: [ID!] @validate(constraint: "dive,omitempty,mongodb")
+        start: Int @validate(constraint: "number,gte=0,omitempty")
+        limit: Int @validate(constraint: "number,gte=1,omitemtpy")
+        sort: Sort @validate(constraint: "omitempty")
+        search: String @validate(constraint: "max=32,omitempty")
+        filter: MeetFilter @validate(constraint: "omitempty")
+    ): MeetConnection! @auth
+
+    meet(id: ID! @validate(constraint: "required,mongodb")): Meet! @auth
+}
+
+extend type Mutation {
+    saveMeet(input: MeetInput!): Boolean! @auth
+    deleteMeet(id: ID! @validate(constraint: "required,mongodb")): Boolean! @auth
+    changeMeetStatus(id: ID! @validate(constraint:"required,mongodb"),status: MeetStatusEnum! @validate(constraint:"required")): Boolean! @auth
+    bulkChangeMeetsStatus(ids: [ID!]! @validate(constraint: "dive,required,mongodb"),status: MeetStatusEnum! @validate(constraint:"required")): Boolean! @auth
+    bulkDeleteMeets(ids: [ID!]! @validate(constraint: "dive,required,mongodb")): Boolean! @auth
+}

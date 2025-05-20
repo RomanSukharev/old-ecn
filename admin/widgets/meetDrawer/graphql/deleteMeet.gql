@@ -1,0 +1,3 @@
+mutation deleteMeet($id: ID!) {
+  deleteMeet(id: $id)
+}

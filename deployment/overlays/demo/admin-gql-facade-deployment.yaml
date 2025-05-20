@@ -1,0 +1,8 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: admin-gql-facade
+  labels:
+    app: admin-gql-facade
+  annotations:
+    link.argocd.argoproj.io/external-link: https://ecn-admin-server.demo.pinkit.tech/

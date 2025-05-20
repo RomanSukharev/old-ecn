@@ -1,0 +1,28 @@
+query vacancies {
+  vacancies {
+    nodes {
+      id
+      title
+      description
+      experience
+      salary
+      schedule
+    }
+  }
+
+  employees(limit: 30) {
+    nodes {
+      id
+      name
+      surname
+      shortDescription
+      description
+      avatar {
+        url
+      }
+      publicImage {
+        url
+      }
+    }
+  }
+}

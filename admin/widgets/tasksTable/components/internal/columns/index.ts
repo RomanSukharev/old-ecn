@@ -1,0 +1,11 @@
+export { default as TaskColumn } from "./TaskColumn.vue";
+export { default as ExecutorColumn } from "./ExecutorColumn.vue";
+export { default as CheckerColumn } from "./CheckerColumn.vue";
+export { default as ObjectNameColumn } from "./ObjectNameColumn.vue";
+export { default as ContactColumn } from "./ContactColumn.vue";
+export { default as LeadColumn } from "./LeadColumn.vue";
+export { default as DealColumn } from "./DealColumn.vue";
+export { default as StartColumn } from "./StartColumn.vue";
+export { default as EndColumn } from "./EndColumn.vue";
+export { default as PeriodColumn } from "./PeriodColumn.vue";
+export { default as InformationColumn } from "./InformationColumn.vue";

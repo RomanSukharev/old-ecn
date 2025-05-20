@@ -1,0 +1,112 @@
+enum CounterPartyTypeEnum {
+  SALER
+  BUYER
+  BOTH
+}
+
+enum ContactSourceEnum {
+  SOURCE
+}
+
+type Contact {
+  id: ID!
+  internalNumber: Int
+  type: CounterPartyTypeEnum
+  source: ContactSourceEnum
+  name: String
+  surname: String
+  patronymic: String
+  birthday: Time
+  phone: String
+  additionalPhones: [String!]
+  email: String
+  company: String
+  address: String
+  properties: [Property!]
+  passportNumber: String
+  passportIssuedBy: String
+  passportIssueDate: Time
+  passportIssuerCode: String
+  internalInfo: String
+  note: String
+  deals: [Deal!]
+  agents: [Employee!]
+  contracts: [Document!]
+  documents: [Document!]
+  lead: Lead
+  isDeleted: Boolean!
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type ContactConnection {
+  totalCount: Int!
+  edges: [ContactEdge!]!
+  nodes: [Contact!]!
+  pageInfo: PageInfo!
+}
+
+type ContactEdge {
+  node: Contact!
+  cursor: Cursor!
+}
+
+input ContactInput {
+  id: ID @validate(constraint: "omitempty,mongodb")
+  type: CounterPartyTypeEnum @validate(constraint: "omitempty")
+  source: ContactSourceEnum @validate(constraint: "omitempty")
+  name: String! @validate(constraint: "required,max=100")
+  surname: String! @validate(constraint: "required,max=100")
+  patronymic: String @validate(constraint: "max=100,omitempty")
+  birthday: Time @validate(constraint: "omitempty")
+  phone: String! @validate(constraint: "required,len=11,startswith=8,number")
+  additionalPhones: [String!]
+    @validate(constraint: "omitempty,dive,len=11,startswith=8,number")
+  email: String! @validate(constraint: "required,email")
+  company: String @validate(constraint: "omitempty,max=255")
+  address: String @validate(constraint: "omitempty")
+  propertyIDs: [ID!] @validate(constraint: "dive,omitempty,mongodb")
+  passportNumber: String @validate(constraint: "omitempty,max=20")
+  passportIssuedBy: String @validate(constraint: "omitempty,max=255")
+  passportIssueDate: Time @validate(constraint: "omitempty")
+  passportIssuerCode: String @validate(constraint: "omitempty")
+  internalInfo: String @validate(constraint: "omitempty")
+  note: String @validate(constraint: "max=4096,omitempty")
+  dealIDs: [ID!] @validate(constraint: "dive,omitempty,mongodb")
+  agentIDs: [ID!] @validate(constraint: "dive,omitempty,mongodb")
+  contracts: [DocumentInput!] @validate(constraint: "omitempty")
+  documents: [DocumentInput!] @validate(constraint: "omitempty")
+  leadID: ID @validate(constraint: "omitempty,mongodb")
+}
+
+input ContactFilter {
+  phone: String @validate(constraint: "len=11,startswith=8,number,omitempty")
+  email: String @validate(constraint: "email,omitempty")
+  type: CounterPartyTypeEnum @validate(constraint: "omitempty")
+  company: String @validate(constraint: "max=255,omitempty")
+  address: String @validate(constraint: "omitempty")
+  employee: ID @validate(constraint: "omitempty")
+  createdAtMin: Time @validate(constraint: "omitempty")
+  createdAtMax: Time @validate(constraint: "omitempty")
+}
+
+extend type Query {
+  contacts(
+    ids: [ID!] @validate(constraint: "dive,omitempty,mongodb")
+    start: Int @validate(constraint: "number,gte=0,omitempty")
+    limit: Int @validate(constraint: "number,gte=1,omitemtpy")
+    sort: Sort @validate(constraint: "omitempty")
+    search: String @validate(constraint: "max=32,omitempty")
+    filter: ContactFilter @validate(constraint: "omitempty")
+  ): ContactConnection! @auth
+  contact(id: ID! @validate(constraint: "required,mongodb")): Contact! @auth
+}
+
+extend type Mutation {
+  saveContact(input: ContactInput!): Boolean! @auth
+  deleteContact(id: ID! @validate(constraint: "required,mongodb")): Boolean!
+    @auth
+  bulkDeleteContacts(
+    ids: [ID!]! @validate(constraint: "dive,required,mongodb")
+  ): Boolean! @auth
+}

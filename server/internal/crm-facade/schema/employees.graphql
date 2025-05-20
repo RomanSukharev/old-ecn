@@ -1,0 +1,107 @@
+type Employee {
+  id: ID!
+  name: String!
+  surname: String!
+  patronymic: String
+  birthday: Time
+  email: String!
+  phone: String!
+  position: Position @goField(forceResolver: true)
+  department: Department @goField(forceResolver: true)
+  group: DepartmentGroup @goField(forceResolver: true)
+  role: Role @goField(forceResolver: true)
+  internalInfo: String
+  shortDescription: String
+  description: String
+  isPublished: Boolean!
+  isDeleted: Boolean!
+  avatar: Image @goField(forceResolver: true)
+  publicImage: Image @goField(forceResolver: true)
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+#
+# Выдача списочного результата
+#
+
+type EmployeeConnection {
+  totalCount: Int!
+  edges: [EmployeeEdge!]!
+  nodes: [Employee!]!
+  pageInfo: PageInfo!
+}
+
+type EmployeeEdge {
+  node: Employee!
+  cursor: Cursor!
+}
+
+input EmployeesFilterInput {
+  position: ID @validate(constraint: "mongodb")
+  department: ID @validate(constraint: "mongodb")
+  group: ID @validate(constraint: "mongodb")
+  role: ID @validate(constraint: "mongodb")
+  isActive: Boolean @validate(constraint: "boolean")
+  isPublished: Boolean @validate(constraint: "boolean")
+  isDeleted: Boolean @validate(constraint: "boolean")
+}
+
+input EmployeeInput {
+  """
+  Уникальный идентифкатор
+  При отсутствии будет создан автоматически
+  """
+  id: ID @validate(constraint: "mongodb")
+  name: String! @validate(constraint: "required,max=100,min=3")
+  surname: String! @validate(constraint: "required,max=100,min=3")
+  patronymic: String @validate(constraint: "max=100,min=3")
+  birthday: Time
+  email: String! @validate(constraint: "required,email")
+  phone: String! @validate(constraint: "required,len=11,startswith=8,number")
+  password: String @validate(constraint: "max=32,min=6,alphanum")
+  positionID: ID @validate(constraint: "mongodb")
+  departmentID: ID @validate(constraint: "mongodb")
+  groupID: ID @validate(constraint: "mongodb")
+  roleID: ID @validate(constraint: "mongodb")
+  internalInfo: String @validate(constraint: "max=1000,min=3")
+  shortDescription: String @validate(constraint: "max=200,min=3")
+  description: String @validate(constraint: "max=1000,min=3")
+  isPublished: Boolean
+  avatar: ImageInput @goField(forceResolver: true)
+  publicImage: ImageInput @goField(forceResolver: true)
+}
+
+extend type Query {
+  employees(
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    start: Int @validate(constraint: "number,gte=0")
+    limit: Int @validate(constraint: "number,gte=1")
+    sort: Sort
+    search: String @validate(constraint: "min=3,max=32")
+    filter: EmployeesFilterInput
+  ): EmployeeConnection! @auth
+
+  employee(id: ID! @validate(constraint: "required,mongodb")): Employee! @auth
+}
+
+extend type Mutation {
+  saveEmployee(input: EmployeeInput!): Boolean!
+    @hasPermission(permission: "STAFF_SAVE_EMPLOYEE")
+  deleteEmployee(id: ID!): Boolean!
+    @hasPermission(permission: "STAFF_DELETE_EMPLOYEE")
+  deleteEmployees(ids: [ID!]!): Boolean!
+    @hasPermission(permission: "STAFF_DELETE_EMPLOYEE")
+  activateEmployees(ids: [ID!]!): Boolean!
+    @hasPermission(permission: "STAFF_SAVE_EMPLOYEE")
+  deactivateEmployees(ids: [ID!]!): Boolean!
+    @hasPermission(permission: "STAFF_SAVE_EMPLOYEE")
+  publishEmployees(ids: [ID!]!): Boolean!
+    @hasPermission(permission: "STAFF_SAVE_EMPLOYEE")
+  unpublishEmployees(ids: [ID!]!): Boolean!
+    @hasPermission(permission: "STAFF_SAVE_EMPLOYEE")
+  assignDepartmentToEmployees(department: ID!, ids: [ID!]!): Boolean!
+    @hasPermission(permission: "STAFF_SAVE_EMPLOYEE")
+  assignRoleToEmployees(role: ID!, ids: [ID!]!): Boolean!
+    @hasPermission(permission: "STAFF_SAVE_EMPLOYEE")
+}

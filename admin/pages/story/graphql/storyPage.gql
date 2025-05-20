@@ -1,0 +1,19 @@
+query storyPage($id: ID!) {
+  story(id: $id) {
+    id
+    category
+    title
+    teaser
+    contentBlocks {
+      type
+      data
+      isVisible
+    }
+    cover {
+      id
+      url
+    }
+    createdAt
+    updatedAt
+  }
+}

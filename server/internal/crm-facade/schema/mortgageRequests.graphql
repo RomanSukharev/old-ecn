@@ -1,0 +1,103 @@
+enum MortgageRequestStatusEnum {
+    SENT
+    APPROVED
+    REFUSAL
+    OBJECT_APPROVAL
+    BANK_EXPECTATION
+}
+
+type MortgageRequest {
+    id: ID!
+    internalNumber: Int
+    status: MortgageRequestStatusEnum
+    contact: Contact
+    banks: [Bank!]
+    mortgageBroker: Employee
+    agent: Employee
+    deal: Deal
+    property: Property
+    amount: Float
+    firstDeposit: Float
+    period: Int
+    comment: String
+    contracts: [Document!]
+    documents: [Document!]
+    sendDate: Time
+    responseDate: Time
+    validTillDate: Time
+    percentage: Float
+    isDeleted: Boolean
+    createdAt: Time!
+    updatedAt: Time!
+}
+
+type MortgageRequestConnection {
+    totalCount: Int! 
+    edges: [MortgageRequestEdge!]!
+    nodes: [MortgageRequest!]! 
+    pageInfo: PageInfo! 
+}
+
+type MortgageRequestEdge {
+    node: MortgageRequest! 
+    cursor: Cursor! 
+}
+
+input MortgageRequestInput {
+    id: ID @validate(constraint: "omitempty,mongodb")
+    status: MortgageRequestStatusEnum @validate(constraint:"omitempty")
+    contactID: ID @validate(constraint:"mongodb,omitempty")
+    bankIDs: [ID!] @validate(constraint:"dive,omitempty,mongodb")
+    mortgageBrokerID: ID @validate(constraint:"mongodb,omitempty")
+    agentID: ID @validate(constraint:"mongodb,omitempty")
+    dealID: ID @validate(constraint:"mongodb,omitempty")
+    propertyID: ID @validate(constraint: "mongodb,omitempty")
+    amount: Float @validate(constraint:"omitempty")
+    firstDeposit: Float @validate(constraint:"omitempty")
+    period: Int @validate(constraint:"omitempty")
+    comment: String @validate(constraint: "max=4096,omitempty")
+    contracts: [DocumentInput!] @validate(constraint:"omitempty")
+    documents: [DocumentInput!] @validate(constraint:"omitempty")
+    sendDate: Time @validate(constraint:"omitempty")
+    responseDate: Time @validate(constraint:"omitempty")
+    validTillDate: Time @validate(constraint:"omitempty")
+    percentage: Float @validate(constraint:"omitempty")
+}
+
+input MortgageRequestFilter {
+    status: MortgageRequestStatusEnum @validate(constraint: "omitempty")
+    mortgageBroker: ID @validate(constraint: "omitempty,mongodb")
+    agent: ID @validate(constraint: "omitempty,mongodb")
+    contact: ID @validate(constraint: "mongodb,omitempty")
+    property: ID @validate(constraint: "mongodb,omitempty")
+    deal: ID @validate(constraint:"mongodb,omitempty")
+    amount: Float @validate(constraint:"omitempty")
+    firstDeposit: Float @validate(constraint:"omitempty")
+    period: Int @validate(constraint:"omitempty")
+    percentage: Float @validate(constraint:"omitempty")
+    sendDate: Time @validate(constraint: "omitempty")
+    responseDate: Time @validate(constraint: "omitempty")
+    createdAtMin: Time @validate(constraint: "omitempty")
+    createdAtMax: Time @validate(constraint: "omitempty")
+}
+
+extend type Query {
+    mortgageRequests(
+        ids: [ID!] @validate(constraint: "dive,omitempty,mongodb")
+        start: Int @validate(constraint: "number,gte=0,omitempty")
+        limit: Int @validate(constraint: "number,gte=1,omitemtpy")
+        sort: Sort @validate(constraint: "omitempty")
+        search: String @validate(constraint: "max=32,omitempty")
+        filter: MortgageRequestFilter @validate(constraint: "omitempty")
+    ): MortgageRequestConnection! @auth
+
+    mortgageRequest(id: ID! @validate(constraint: "required,mongodb")): MortgageRequest! @auth
+}
+
+extend type Mutation {
+    saveMortgageRequest(input: MortgageRequestInput!): Boolean! @auth
+    deleteMortgageRequest(id: ID! @validate(constraint: "required,mongodb")): Boolean! @auth
+    changeMortgageRequestStatus(id: ID! @validate(constraint:"required,mongodb"),status: MortgageRequestStatusEnum! @validate(constraint:"required")): Boolean! @auth
+    bulkChangeMortgageRequestsStatus(ids: [ID!]! @validate(constraint: "dive,required,mongodb"),status: MortgageRequestStatusEnum! @validate(constraint:"required")): Boolean! @auth
+    bulkDeleteMortgageRequests(ids: [ID!]! @validate(constraint: "dive,required,mongodb")): Boolean! @auth
+}

@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: fe-public
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`ecn-public.dev.pinkit.tech`)
+      kind: Rule
+      services:
+        - name: fe-public
+          port: 3000
+  tls:
+    certResolver: pink-le

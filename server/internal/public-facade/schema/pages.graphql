@@ -1,0 +1,38 @@
+type Page {
+  id: ID!
+  url: String!
+  title: String!
+  description: String!
+  contentBlocks: [ContentBlock!]!
+  status: PublicationStatusEnum!
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+#
+# Выдача списочного результата
+#
+
+type PageConnection {
+  totalCount: Int!
+  edges: [PageEdge!]!
+  nodes: [Page!]!
+  pageInfo: PageInfo!
+}
+
+type PageEdge {
+  node: Page!
+  cursor: Cursor!
+}
+
+extend type Query {
+  """
+  Получение страницы по URL
+  """
+  page(
+    """
+    URL страницы
+    """
+    url: String! @validate(constraint: "required")
+  ): Page!
+}

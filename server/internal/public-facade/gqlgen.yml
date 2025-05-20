@@ -1,0 +1,28 @@
+# Where are all the schema files located? globs are supported eg  src/**/*.graphqls
+schema:
+  - schema/**/*.graphql
+exec:
+  filename: gateway/generated.go
+  package: public_gateway
+model:
+  filename: models/models_gen.go
+  package: public_models
+resolver:
+  layout: follow-schema
+  dir: resolvers
+  package: public_resolvers
+  filename_template: "{name}.resolvers.go"
+autobind:
+  - "github.com/pinks-agency/ecn/server/internal/public-facade/models"
+models:
+  ID:
+    model:
+      - github.com/99designs/gqlgen/graphql.String
+
+  Cursor:
+    model:
+      - github.com/99designs/gqlgen/graphql.String
+
+  JSON:
+    model:
+      - github.com/99designs/gqlgen/graphql.Map

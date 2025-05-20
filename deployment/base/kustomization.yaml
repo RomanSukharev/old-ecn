@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - admin-gql-facade-cm.yaml
+  - admin-gql-facade-deployment.yaml
+  - admin-gql-facade-service.yaml
+  - admin-gql-facade-ingress-route.yaml
+  - public-gql-facade-cm.yaml
+  - public-gql-facade-deployment.yaml
+  - public-gql-facade-service.yaml
+  - public-gql-facade-ingress-route.yaml
+  - fe-admin-cm.yaml
+  - fe-admin-deployment.yaml
+  - fe-admin-service.yaml
+  - fe-admin-ingress-route.yaml
+  - fe-public-cm.yaml
+  - fe-public-deployment.yaml
+  - fe-public-service.yaml
+  - fe-public-ingress-route.yaml
+  - redis-deployment.yaml
+  - redis-service.yaml
+
+namespace: ecn

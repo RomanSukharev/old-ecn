@@ -1,0 +1,47 @@
+query complexHouse($id: ID!) {
+  complexHouse(id: $id) {
+    id
+
+    complex {
+      id
+      title
+    }
+
+    title
+    description
+    address
+    lat
+    lon
+    cadastrNumber
+    seoText
+    youtubeLink
+    tourLink
+
+    isReady
+    readinessQuarter
+    readinessYear
+
+    images {
+      id
+      url
+      title
+    }
+
+    documents {
+      id
+      url
+      title
+      fileName
+    }
+
+    projectDeclarations {
+      id
+      url
+      title
+      fileName
+    }
+
+    createdAt
+    updatedAt
+  }
+}

@@ -1,0 +1,3 @@
+mutation bulkDeleteReviews($ids: [ID!]!) {
+  bulkDeleteReviews(ids: $ids)
+}

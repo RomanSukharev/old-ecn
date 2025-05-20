@@ -1,0 +1,112 @@
+enum LeadTypeEnum {
+  SALER
+  BUYER
+  BOTH
+}
+
+enum LeadStatusEnum {
+  NEW
+  IN_PROGRESS
+  REFUSED
+  SUCCESS
+  THINKING
+}
+
+enum LeadSourceEnum {
+  SOURCE
+}
+
+type Lead {
+  id: ID!
+  internalNumber: Int
+  type: LeadTypeEnum
+  source: LeadSourceEnum
+  name: String
+  surname: String
+  patronymic: String
+  birthday: Time
+  phone: String
+  additionalPhones: [String!]
+  email: String
+  company: String
+  address: String
+  request: String
+  agents: [Employee!]
+  status: LeadStatusEnum
+  comment: String
+  isDeleted: Boolean!
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type LeadConnection {
+  totalCount: Int!
+  edges: [LeadEdge!]!
+  nodes: [Lead!]!
+  pageInfo: PageInfo!
+}
+
+type LeadEdge {
+  node: Lead!
+  cursor: Cursor!
+}
+
+input LeadInput {
+  id: ID @validate(constraint: "omitempty,mongodb")
+  type: LeadTypeEnum @validate(constraint: "omitempty")
+  source: LeadSourceEnum @validate(constraint: "omitempty")
+  name: String @validate(constraint: "required,max=100")
+  surname: String @validate(constraint: "required,max=100")
+  patronymic: String @validate(constraint: "omitempty,max=100")
+  birthday: Time @validate(constraint: "omitempty")
+  phone: String @validate(constraint: "required,len=11,startswith=8,number")
+  additionalPhones: [String!]
+    @validate(constraint: "omitempty,dive,len=11,startswith=8,number")
+  email: String @validate(constraint: "required,email")
+  company: String @validate(constraint: "omitempty,max=255")
+  address: String @validate(constraint: "omitempty")
+  request: String @validate(constraint: "omitempty")
+  agentIDs: [ID!] @validate(constraint: "dive,omitempty,mongodb")
+  status: LeadStatusEnum @validate(constraint: "omitempty")
+  comment: String @validate(constraint: "omitempty,max=4096")
+}
+
+input LeadFilter {
+  phone: String @validate(constraint: "len=11,startswith=8,number,omitempty")
+  email: String @validate(constraint: "email,omitempty")
+  type: LeadTypeEnum @validate(constraint: "omitempty")
+  status: LeadStatusEnum @validate(constraint: "omitempty")
+  company: String @validate(constraint: "max=255,omitempty")
+  createdAtMin: Time @validate(constraint: "omitempty")
+  createdAtMax: Time @validate(constraint: "omitempty")
+}
+
+extend type Query {
+  leads(
+    ids: [ID!] @validate(constraint: "dive,omitempty,mongodb")
+    start: Int @validate(constraint: "number,gte=0,omitempty")
+    limit: Int @validate(constraint: "number,gte=1,omitemtpy")
+    sort: Sort @validate(constraint: "omitempty")
+    search: String @validate(constraint: "max=32,omitempty")
+    filter: LeadFilter @validate(constraint: "omitempty")
+  ): LeadConnection! @auth
+  lead(id: ID! @validate(constraint: "required,mongodb")): Lead! @auth
+}
+
+extend type Mutation {
+  saveLead(input: LeadInput!): Boolean! @auth
+  deleteLead(id: ID! @validate(constraint: "required,mongodb")): Boolean! @auth
+  changeLeadStatus(
+    id: ID! @validate(constraint: "required,mongodb")
+    status: LeadStatusEnum! @validate(constraint: "required")
+    comment: String @validate(constraint: "omitempty")
+  ): Boolean! @auth
+  bulkChangeLeadsStatus(
+    ids: [ID!]! @validate(constraint: "dive,required,mongodb")
+    status: LeadStatusEnum! @validate(constraint: "required")
+    comment: String @validate(constraint: "omitempty")
+  ): Boolean! @auth
+  bulkDeleteLeads(
+    ids: [ID!]! @validate(constraint: "dive,required,mongodb")
+  ): Boolean! @auth
+}

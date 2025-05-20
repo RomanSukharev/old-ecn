@@ -1,0 +1,93 @@
+query deal($id: ID!) {
+  deal(id: $id) {
+    address
+    depositDate
+    finishedAt
+    id
+    internalComment
+    internalNumber
+    accountant {
+      id 
+      name
+      surname
+      patronymic
+    }
+    buyerAgent {
+      id 
+      name
+      surname
+      patronymic
+    }
+    buyerContact {
+      id 
+      name
+      surname
+      patronymic
+    }
+    sellerAgent {
+      id 
+      name
+      surname
+      patronymic
+    }
+    sellerContact {
+      id 
+      name
+      surname
+      patronymic
+    }
+    mortgageBroker {
+      id 
+      name
+      surname
+      patronymic
+    }
+    property {
+      id
+      title
+    }
+    lawer {
+      id 
+      name
+      surname
+      patronymic
+    }
+    isDeleted
+    sellerPhone
+    sellerDocuments {
+      id
+      url
+      title
+    }
+    mortgageDocuments {
+      id
+      url
+      title
+    }
+    mortgageRequest {
+      id
+    }
+    accountantDocuments {
+      id
+      url 
+      title
+    }
+    lawerDocuments {
+      id
+      url 
+      title
+    }
+    buyerDocuments {
+      id
+      url
+      title
+    }
+    stage
+    type
+    updatedAt
+    buyerPhone
+    commissionAmount
+    createdAt
+    dealDate
+  }
+}

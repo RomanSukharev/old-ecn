@@ -1,0 +1,10 @@
+export { default as IDColumn } from "./IDColumn.vue";
+export { default as TypePropertyColumn } from "./TypePropertyColumn.vue";
+export { default as NamePropertyColumn } from "./NamePropertyColumn.vue";
+export { default as ApartmentComplexColumn } from "./ApartmentComplexColumn.vue";
+export { default as AddressColumn } from "./AddressColumn.vue";
+export { default as PhotoColumn } from "./PhotoColumn.vue";
+export { default as BuildDateColumn } from "./BuildDateColumn.vue";
+export { default as DistanceToCityColumn } from "./DistanceToCityColumn.vue";
+export { default as PriceColumn } from "./PriceColumn.vue";
+export { default as DatesColumn } from "./DatesColumn.vue";

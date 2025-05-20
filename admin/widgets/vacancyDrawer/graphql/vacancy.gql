@@ -1,0 +1,13 @@
+query vacancy($id: ID!) {
+  vacancy(id: $id) {
+    id
+    title
+    description
+    experience
+    salary
+    schedule
+    publicationStatus
+    createdAt
+    updatedAt
+  }
+}

@@ -1,0 +1,16 @@
+query page($id: ID!) {
+  page(id: $id) {
+    id
+    url
+    title
+    description
+    contentBlocks {
+      type
+      data
+      isVisible
+    }
+    status
+    createdAt
+    updatedAt
+  }
+}

@@ -1,0 +1,3 @@
+mutation bulkDeleteLeads($ids: [ID!]!) {
+  bulkDeleteLeads(ids: $ids)
+}

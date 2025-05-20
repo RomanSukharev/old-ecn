@@ -1,0 +1,27 @@
+"""
+Отклик на вакансию
+"""
+input VacancyRequestInput {
+  """
+  Связанная вакансия
+  """
+  vacancy: ID!
+  """
+  Имя соискателя
+  """
+  name: String!
+  """
+  Сопроводительное письмо
+  """
+  letter: String!
+  """
+  Вложения
+  """
+  attachments: [DocumentInput!]
+}
+
+extend type Mutation {
+  createVacancyRequest(
+    input: VacancyRequestInput! @validate(constraint: "required")
+  ): Boolean!
+}

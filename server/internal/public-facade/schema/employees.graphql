@@ -1,0 +1,46 @@
+type Employee {
+  id: ID!
+  name: String!
+  surname: String!
+  patronymic: String
+  birthday: Time
+  email: String!
+  phone: String!
+  internalInfo: String
+  shortDescription: String
+  description: String
+  isPublished: Boolean!
+  isDeleted: Boolean!
+  avatar: Image @goField(forceResolver: true)
+  publicImage: Image @goField(forceResolver: true)
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+#
+# Выдача списочного результата
+#
+
+type EmployeeConnection {
+  totalCount: Int!
+  edges: [EmployeeEdge!]!
+  nodes: [Employee!]!
+  pageInfo: PageInfo!
+}
+
+type EmployeeEdge {
+  node: Employee!
+  cursor: Cursor!
+}
+
+extend type Query {
+  employees(
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    start: Int @validate(constraint: "number,gte=0")
+    limit: Int @validate(constraint: "number,gte=1")
+    sort: Sort
+    search: String @validate(constraint: "min=3,max=32")
+  ): EmployeeConnection!
+
+  employee(id: ID! @validate(constraint: "required,mongodb")): Employee!
+}

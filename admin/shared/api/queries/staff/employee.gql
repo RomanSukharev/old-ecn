@@ -1,0 +1,62 @@
+query employee($id: ID!) {
+  employee(id: $id) {
+    id
+    name
+    surname
+    patronymic
+    birthday
+    email
+    phone
+    position {
+      id
+      title
+    }
+    department {
+      id
+      title
+      groups {
+        id
+        title
+      }
+    }
+    group {
+      id
+      title
+    }
+    role {
+      id
+      title
+      permissions
+    }
+    internalInfo
+    shortDescription
+    description
+    isPublished
+    avatar {
+      id
+      url
+      path
+      title
+      fileName
+      fileType
+      previewUrl
+      previewPath
+      blurHash
+      preset
+    }
+    publicImage {
+      id
+      url
+      path
+      title
+      fileName
+      fileType
+      previewUrl
+      previewPath
+      blurHash
+      preset
+    }
+    createdAt
+    updatedAt
+  }
+}

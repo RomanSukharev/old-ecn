@@ -1,0 +1,3 @@
+mutation saveComplexHouse($input: ComplexHouseInput!) {
+  saveComplexHouse(input: $input)
+}

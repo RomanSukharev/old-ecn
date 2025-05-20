@@ -1,0 +1,48 @@
+query contact($id: ID!) {
+  contact(id: $id) {
+    id
+    name
+    surname
+    patronymic
+    phone
+    note
+    email
+    company
+    passportIssueDate
+    passportNumber
+    passportIssuedBy
+    passportIssuerCode
+    additionalPhones
+    internalNumber
+    birthday
+    source
+    type
+    address
+    deals {
+      id
+      internalNumber
+    }
+    properties {
+      id
+      title
+    }
+    agents {
+      id
+      name
+      surname
+      patronymic
+    }
+    documents {
+      id
+      url
+      title
+    }
+    contracts {
+      id
+      url
+      title
+    }
+    createdAt
+    updatedAt
+  }
+}

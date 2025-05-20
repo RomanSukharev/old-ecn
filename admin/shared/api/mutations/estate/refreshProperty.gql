@@ -1,0 +1,3 @@
+mutation refreshProperty($id: ID!) {
+  refreshProperty(id: $id)
+}

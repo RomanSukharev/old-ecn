@@ -1,0 +1,15 @@
+query employee($id: ID!) {
+  employee(id: $id) {
+    id
+    name
+    surname
+    avatar {
+      url
+    }
+    publicImage {
+      url
+    }
+    description
+    shortDescription
+  }
+}

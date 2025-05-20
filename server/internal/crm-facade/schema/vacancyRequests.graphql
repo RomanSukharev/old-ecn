@@ -1,0 +1,129 @@
+"""
+Отклик на вакансию
+"""
+type VacancyRequest {
+  """
+  Уникальный идентификатор
+  """
+  id: ID!
+  """
+  Связанная вакансия
+  """
+  vacancy: Vacancy!
+  """
+  Имя соискателя
+  """
+  name: String!
+  """
+  Сопроводительное письмо
+  """
+  letter: String!
+  """
+  Вложения
+  """
+  attachments: [Document!]
+  """
+  Внутренний комментарий
+  """
+  internalComment: String
+  """
+  Статус отклика
+  """
+  status: VacancyRequestStatusEnum!
+  """
+  Дата и время создания
+  """
+  createdAt: Time!
+  """
+  Дата и время обновления
+  """
+  updatedAt: Time!
+}
+
+#
+# Выдача списочного результата
+#
+
+type VacancyRequestConnection {
+  totalCount: Int!
+  edges: [VacancyRequestEdge!]!
+  nodes: [VacancyRequest!]!
+  pageInfo: PageInfo!
+}
+
+type VacancyRequestEdge {
+  node: VacancyRequest!
+  cursor: Cursor!
+}
+
+"""
+Статус отклика на вакансию
+"""
+enum VacancyRequestStatusEnum {
+  """
+  Новый
+  """
+  NEW
+  """
+  Отклонён
+  """
+  DECLINED
+  """
+  Принят в работу
+  """
+  APPROVED
+}
+
+extend type Query {
+  """
+  Получение списка откликов
+  """
+  vacancyRequests(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+  ): VacancyRequestConnection! @auth
+
+  """
+  Получение отклика по идентификатору
+  """
+  vacancyRequest(
+    """
+    Уникальный идентификатор
+    """
+    id: ID! @validate(constraint: "required,mongodb")
+  ): VacancyRequest! @auth
+}
+
+extend type Mutation {
+  approveVacancyRequest(
+    """
+    Уникальный идентификатор
+    """
+    id: ID! @validate(constraint: "required,mongodb")
+  ): Boolean! @auth
+
+  declineVacancyRequest(
+    """
+    Уникальный идентификатор
+    """
+    id: ID! @validate(constraint: "required,mongodb")
+  ): Boolean! @auth
+}

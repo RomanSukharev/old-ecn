@@ -1,0 +1,3 @@
+mutation deleteDeveloper($id: ID!) {
+  deleteDeveloper(id: $id)
+}

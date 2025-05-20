@@ -1,0 +1,3 @@
+mutation saveTask($input: TaskInput!) {
+  saveTask(input: $input)
+}

@@ -1,0 +1,14 @@
+mutation uploadImage($input: ImageInput!) {
+  uploadImage(input: $input) {
+    id
+    url
+    path
+    title
+    fileName
+    fileType
+    previewUrl
+    previewPath
+    blurHash
+    preset
+  }
+}

@@ -1,0 +1,3 @@
+mutation saveEmployee($input: EmployeeInput!) {
+  saveEmployee(input: $input)
+}

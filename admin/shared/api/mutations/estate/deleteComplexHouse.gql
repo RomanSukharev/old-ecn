@@ -1,0 +1,3 @@
+mutation deleteComplexHouse($id: ID!) {
+  deleteComplexHouse(id: $id)
+}

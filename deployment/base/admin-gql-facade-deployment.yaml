@@ -1,0 +1,41 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: admin-gql-facade
+  labels:
+    app: admin-gql-facade
+  annotations:
+    link.argocd.argoproj.io/external-link: https://ecn-admin-server.dev.pinkit.tech/
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin-gql-facade
+  template:
+    metadata:
+      labels:
+        app: admin-gql-facade
+    spec:
+      containers:
+        - name: admin-gql-facade
+          image: backend
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: admin-gql-facade-env
+            - secretRef:
+                name: config
+          command: ["/crm-facade-service"]
+          ports:
+            - name: web
+              containerPort: 8000
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "25m"
+            limits:
+              memory: "64Mi"
+              cpu: "50m"
+      imagePullSecrets:
+        - name: selcloud

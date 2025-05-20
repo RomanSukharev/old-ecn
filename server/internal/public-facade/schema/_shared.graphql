@@ -1,0 +1,114 @@
+#
+# Custom Scalars
+#
+
+scalar Time
+scalar Upload
+scalar Cursor
+scalar JSON
+
+#
+# Directives
+#
+
+directive @goModel(
+  model: String
+  models: [String!]
+  forceGenerate: Boolean
+) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | ENUM_VALUE | INTERFACE | UNION
+
+directive @goField(
+  forceResolver: Boolean
+  name: String
+  omittable: Boolean
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+directive @goTag(
+  key: String!
+  value: String
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+directive @validate(
+  constraint: String!
+) on INPUT_FIELD_DEFINITION | ARGUMENT_DEFINITION
+
+"""
+Направления сортировки
+"""
+enum SortDirection {
+  """
+  По возрастанию
+  """
+  ASC
+  """
+  По убыванию
+  """
+  DESC
+}
+
+"""
+Режим сортировки для списочных методов
+"""
+input Sort {
+  """
+  Поле, по которому производится сортировка
+  """
+  field: String = "id"
+  """
+  Направление сортировки по выбранному полю
+  """
+  direction: SortDirection = ASC
+}
+
+"""
+Статус публикации
+"""
+enum PublicationStatusEnum {
+  """
+  Запись опубликована
+  """
+  PUBLISHED
+  """
+  Черновик
+  """
+  DRAFT
+  """
+  Запись снята с публикации
+  """
+  UNPUBLISHED
+}
+
+type Readiness {
+  year: Int
+  quarter: Int
+}
+
+# Interfaces
+
+interface Node {
+  id: ID!
+}
+
+# Pagination
+
+type PageInfo {
+  startCursor: Cursor
+  endCursor: Cursor
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+input PaginationInput {
+  first: Int
+  last: Int
+  after: Cursor
+  before: Cursor
+}
+
+enum QuarterEnum {
+  I
+  II
+  III
+  IV
+}
+

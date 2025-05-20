@@ -1,0 +1,29 @@
+services:
+  crm-facade:
+    port: ":8000"
+
+  public-facade:
+    port: ":8001"
+
+infrastructure:
+  mongodb:
+    uri: "mongodb://ecn:ecn@localhost:27017/ecn"
+    database: "ecn"
+  redis:
+    url: "localhost:6379"
+  s3:
+    endpoint:
+    public-domain:
+    bucket: "ecn"
+    access-key:
+    secret-key:
+  mail:
+
+metrics:
+  enabled: false
+
+caching:
+  enabled: false
+
+tracing:
+  enabled: false

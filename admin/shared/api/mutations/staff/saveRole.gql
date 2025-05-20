@@ -1,0 +1,3 @@
+mutation saveRole($input: RoleInput!) {
+  saveRole(input: $input)
+}

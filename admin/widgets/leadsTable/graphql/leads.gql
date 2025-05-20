@@ -1,0 +1,43 @@
+query leads(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $sort: Sort
+  $search: String
+  $filter: LeadFilter
+) {
+  leads(
+    ids: $ids
+    start: $start
+    limit: $limit
+    sort: $sort
+    search: $search
+    filter: $filter
+  ) {
+    totalCount
+    nodes {
+      id
+      internalNumber
+      name
+      surname
+      patronymic
+      phone
+      additionalPhones
+      email
+      request
+      source
+      status
+      type
+      address
+      agents {
+        id
+        name
+        surname
+        patronymic
+      }
+      company
+      createdAt
+      updatedAt
+    }
+  }
+}

@@ -1,0 +1,16 @@
+query stories {
+  stories {
+    totalCount
+    nodes {
+      id
+      category
+      title
+      teaser
+      cover {
+        url
+      }
+      createdAt
+      updatedAt
+    }
+  }
+}

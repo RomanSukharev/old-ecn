@@ -1,0 +1,103 @@
+@font-face {
+  font-family: "Vela Sans";
+  src: local("Vela Sans"), url(/fonts/VelaSans-ExtraLight.woff) format("woff");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vela Sans";
+  src: local("Vela Sans"), url(/fonts/VelaSans-Light.woff) format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vela Sans";
+  src: local("Vela Sans"), url(/fonts/VelaSans-Regular.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vela Sans";
+  src: local("Vela Sans"), url(/fonts/VelaSans-Medium.woff) format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vela Sans";
+  src: local("Vela Sans"), url(/fonts/VelaSans-SemiBold.woff) format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vela Sans";
+  src: local("Vela Sans"), url(/fonts/VelaSans-Bold.woff) format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vela Sans";
+  src: local("Vela Sans"), url(/fonts/VelaSans-ExtraBold.woff) format("woff");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  font-family: "Vela Sans";
+}
+
+.ECN--Table {
+  --easy-table-border: 1px solid rgb(209 213 219);
+  --easy-table-row-border: 1px solid rgb(209 213 219);
+
+  --easy-table-header-font-size: 12px;
+  --easy-table-header-height: 32px;
+  --easy-table-header-font-color: #1f2b31;
+  --easy-table-header-background-color: white;
+  --easy-table-header-item-padding: 8px;
+
+  --easy-table-body-row-height: auto;
+  --easy-table-body-row-font-size: 12px;
+  --easy-table-body-row-background-color: white;
+  --easy-table-body-item-padding: 8px 8px;
+
+  --easy-table-footer-background-color: transparent;
+
+  --easy-table-body-row-hover-background-color: rgb(243 244 246);
+
+  border-radius: 6px;
+  overflow: hidden;
+
+  .vue3-easy-data-table__header th:first-child {
+    border-top-left-radius: 6px;
+  }
+
+  .vue3-easy-data-table__header th:last-child {
+    border-top-right-radius: 6px;
+  }
+
+  .vue3-easy-data-table__body tr:last-child td {
+    border-bottom: 1px solid rgb(209 213 219) !important;
+  }
+
+  .vue3-easy-data-table__main {
+    margin-bottom: -1px;
+  }
+
+  .easy-checkbox label:before {
+    border: 1px solid #bcc4cd;
+    border-radius: 4px;
+    width: 16px;
+    height: 16px;
+  }
+
+  colgroup col:first-child {
+    width: 32px;
+  }
+}

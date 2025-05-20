@@ -1,0 +1,21 @@
+type ContentBlock {
+  type: ContentBlockType!
+  data: JSON!
+  isVisible: Boolean!
+}
+
+input ContentBlockInput {
+  type: ContentBlockType!
+  data: JSON!
+  isVisible: Boolean!
+}
+
+enum ContentBlockType {
+  TEXT
+  CITE
+  FILES
+  YOUTUBE
+  IMAGES
+  ACCORDION
+  SPECIAL
+}

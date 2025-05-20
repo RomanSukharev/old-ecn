@@ -1,0 +1,3 @@
+mutation saveStory($input: StoryInput!) {
+  saveStory(input: $input)
+}

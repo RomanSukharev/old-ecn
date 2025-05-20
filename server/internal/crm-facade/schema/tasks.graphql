@@ -1,0 +1,107 @@
+enum TaskStatusEnum {
+    NEW
+    IN_PROGRESS
+    COMPLETED
+    CLOSED
+    OVERDUE
+}
+
+enum TaskLabelEnum {
+    IMPORTANT
+    NO_MATTER
+}
+
+type Task {
+    id: ID! 
+    internalNumber: Int
+    title: String
+    label: TaskLabelEnum
+    isHot: Boolean
+    status: TaskStatusEnum
+    assignee: Employee
+    reporter: Employee
+    property: Property
+    contact: Contact
+    contactPhone: String
+    lead: Lead
+    deal: Deal
+    startDate: Time
+    durationDays: Int
+    durationHours: Int
+    details: String
+    isCompleted: Boolean
+    endDate: Time
+    tag: String
+    isDeleted: Boolean
+    createdAt: Time!
+    updatedAt: Time!
+}
+
+type TaskConnection {
+    totalCount: Int! 
+    edges: [TaskEdge!]!
+    nodes: [Task!]! 
+    pageInfo: PageInfo! 
+}
+
+type TaskEdge {
+    node: Task! 
+    cursor: Cursor! 
+}
+
+input TaskInput {
+    id: ID @validate(constraint: "mongodb,omitempty")
+    title: String @validate(constraint: "omitempty,min=3,max=500")
+    status: TaskStatusEnum @validate(constraint: "omitempty")
+    label: TaskLabelEnum @validate(constraint: "omitempty")
+    isHot: Boolean @validate(constraint: "omitempty,boolean")
+    assigneeID: ID @validate(constraint: "mongodb,omitempty")
+    reporterID: ID @validate(constraint: "mongodb,omitempty")
+    propertyID: ID @validate(constraint: "mongodb,omitempty")
+    contactID: ID @validate(constraint: "mongodb,omitempty")
+    contactPhone: String @validate(constraint: "omitempty,len=11,startswith=8,number")
+    leadID: ID @validate(constraint: "mongodb,omitempty")
+    dealID: ID @validate(constraint: "mongodb,omitempty")
+    startDate: Time @validate(constraint: "omitempty")
+    durationDays: Int @validate(constraint: "omitempty")
+    durationHours: Int @validate(constraint: "omitempty")
+    details: String @validate(constraint: "max=1000,omitempty" )
+    tag: String @validate(constraint: "max=30,omitempty")
+}
+
+input TaskFilter {
+    status: TaskStatusEnum @validate(constraint: "omitempty")
+    lead: ID @validate(constraint: "mongodb,omitempty")
+    deal: ID @validate(constraint: "mongodb,omitempty")
+    phone: String @validate(constraint: "len=11,startswith=8,number,omitempty")
+    assignee: ID @validate (constraint: "mongodb,omitempty")
+    reporter: ID @validate (constraint: "mongodb,omitempty")
+    contact: ID @validate(constraint: "mongodb,omitempty")
+    property: ID @validate(constraint: "mongodb,omitempty")
+    isHot: Boolean @validate(constraint: "omitempty,boolean")
+    label: TaskLabelEnum @validate(constraint: "omitempty")
+    createdAtMin: Time @validate(constraint: "omitempty")
+    createdAtMax: Time @validate(constraint: "omitempty")
+}
+
+extend type Query {
+    tasks(
+        ids: [ID!] @validate(constraint: "dive,omitempty,mongodb")
+        start: Int @validate(constraint: "number,gte=0,omitempty")
+        limit: Int @validate(constraint: "number,gte=1,omitemtpy")
+        sort: Sort @validate(constraint: "omitempty")
+        search: String @validate(constraint: "max=32,omitempty")
+        filter: TaskFilter @validate(constraint: "omitempty")
+    ): TaskConnection! @auth
+
+    task(id: ID! @validate(constraint: "required,mongodb")): Task! @auth
+}
+
+extend type Mutation {
+    saveTask(input: TaskInput!): Boolean! @auth
+    deleteTask(id: ID! @validate(constraint: "required,mongodb")): Boolean! @auth
+    completeTask(id: ID! @validate(constraint:"required,mongodb")): Boolean! @auth
+    bulkCompleteTasks(ids: [ID!]! @validate(constraint: "dive,required,mongodb")): Boolean! @auth
+    bulkDeleteTasks(ids: [ID!]! @validate(constraint: "dive,required,mongodb")): Boolean! @auth
+}
+

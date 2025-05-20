@@ -1,0 +1,3 @@
+mutation deleteArticleGroup($id: ID!) {
+  deleteArticleGroup(id: $id)
+}

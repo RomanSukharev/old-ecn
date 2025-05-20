@@ -1,0 +1,3 @@
+mutation saveVacancy($input: VacancyInput!) {
+  saveVacancy(input: $input)
+}

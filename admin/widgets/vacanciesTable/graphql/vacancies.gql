@@ -1,0 +1,28 @@
+query vacancies(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $search: String
+  $sort: Sort
+) {
+  vacancies(
+    ids: $ids
+    start: $start
+    limit: $limit
+    search: $search
+    sort: $sort
+  ) {
+    totalCount
+    nodes {
+      id
+      title
+      description
+      experience
+      salary
+      schedule
+      publicationStatus
+      createdAt
+      updatedAt
+    }
+  }
+}

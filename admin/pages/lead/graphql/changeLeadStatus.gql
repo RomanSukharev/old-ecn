@@ -1,0 +1,3 @@
+mutation changeLeadStatus($id: ID!, $status: LeadStatusEnum!) {
+  changeLeadStatus(id: $id, status: $status)
+}

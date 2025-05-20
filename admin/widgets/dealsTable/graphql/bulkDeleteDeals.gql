@@ -1,0 +1,3 @@
+mutation bulkDeleteDeals($ids: [ID!]!) {
+  bulkDeleteDeals(ids: $ids)
+}

@@ -1,0 +1,127 @@
+"""
+Отзыв
+"""
+type Review {
+  """
+  Уникальный идентификатор
+  """
+  id: ID!
+  """
+  Сотрудник
+  """
+  employee: Employee @goField(forceResolver: true)
+  """
+  Текст отзыва
+  """
+  text: String!
+  """
+  Имя автора
+  """
+  authorName: String!
+  """
+  Номер телефона автора
+  """
+  authorPhone: String!
+  """
+  Статус отзыва
+  """
+  status: ReviewStatusEnum!
+  """
+  Дата и время создания
+  """
+  createdAt: Time!
+  """
+  Дата и время обновления
+  """
+  updatedAt: Time!
+}
+
+#
+# Выдача списочного результата
+#
+
+type ReviewConnection {
+  totalCount: Int!
+  edges: [ReviewEdge!]!
+  nodes: [Review!]!
+  pageInfo: PageInfo!
+}
+
+type ReviewEdge {
+  node: Review!
+  cursor: Cursor!
+}
+
+"""
+Расширенный фильтр по отзывам
+"""
+input ReviewsFilterInput {
+  """
+  Набор статусов для фильтрации
+  """
+  statuses: [ReviewStatusEnum!] @validate(constraint: "dive,required")
+  """
+  Набор идентфикаторов сотрудников для фильтрации
+  """
+  employees: [ID!] @validate(constraint: "dive,required,mongodb")
+}
+
+"""
+Статус отзыва
+"""
+enum ReviewStatusEnum {
+  """
+  Новый
+  """
+  NEW
+  """
+  Подтверждён
+  """
+  APPROVED
+  """
+  Отклонён
+  """
+  DECLINED
+}
+
+extend type Query {
+  """
+  Получение списка отзывов
+  """
+  reviews(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+    """
+    Расширенный фильтр
+    """
+    filter: ReviewsFilterInput
+  ): ReviewConnection!
+
+  """
+  Получение отзыва по идентификатору
+  """
+  review(
+    """
+    Уникальный идентификатор
+    """
+    id: ID! @validate(constraint: "required,mongodb")
+  ): Review!
+}

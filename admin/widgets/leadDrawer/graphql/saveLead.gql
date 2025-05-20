@@ -1,0 +1,3 @@
+mutation saveLead($input: LeadInput!) {
+  saveLead(input: $input)
+}

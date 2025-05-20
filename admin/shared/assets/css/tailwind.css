@@ -1,0 +1,39 @@
+@layer tailwind-base, primevue, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+
+@layer primevue {
+  .p-select.p-disabled {
+    @apply bg-gray-100 text-gray-400 border-gray-300 cursor-not-allowed !important;
+  }
+
+  .p-select.p-disabled .p-select-dropdown {
+    @apply hidden !important;
+  }
+
+  .p-select.p-disabled .p-select-label {
+    @apply text-gray-400 !important;
+  }
+
+  .p-multiselect.p-disabled {
+    @apply bg-gray-100 text-gray-400  border-gray-300 cursor-not-allowed !important;
+  }
+  
+
+  .p-multiselect.p-disabled .p-multiselect-dropdown {
+    @apply hidden !important;
+  }
+
+  .p-multiselect.p-disabled .p-multiselect-label {
+    @apply text-gray-400 !important;
+  }
+
+}

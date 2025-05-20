@@ -1,0 +1,160 @@
+"""
+Отдел
+"""
+type Department {
+  """
+  Уникальный идентификатор
+  """
+  id: ID!
+  """
+  Название отдела
+  """
+  title: String!
+  """
+  Группы внутри отдела
+  """
+  groups: [DepartmentGroup!]!
+  """
+  Дата и время создания
+  """
+  createdAt: Time!
+  """
+  Дата и время обновления
+  """
+  updatedAt: Time!
+}
+
+"""
+Группа внутри отдела
+"""
+type DepartmentGroup {
+  """
+  Уникальный идентификатор
+  """
+  id: ID!
+  """
+  Название группы
+  """
+  title: String!
+  """
+  Дата и время создания
+  """
+  createdAt: Time!
+  """
+  Дата и время обновления
+  """
+  updatedAt: Time!
+}
+
+#
+# Выдача списочного результата
+#
+
+type DepartmentConnection {
+  totalCount: Int!
+  edges: [DepartmentEdge!]!
+  nodes: [Department!]!
+  pageInfo: PageInfo!
+}
+
+type DepartmentEdge {
+  node: Department!
+  cursor: Cursor!
+}
+
+"""
+Входные параметры для группы
+"""
+input DepartmentGroupInput {
+  """
+  Уникальный идентификатор
+  При отсутствии будет создан автоматически
+  """
+  id: ID @validate(constraint: "mongodb")
+  """
+  Название группы
+  """
+  title: String! @validate(constraint: "required,max=100,min=3")
+}
+
+"""
+Входные параметры для отдела
+"""
+input DepartmentInput {
+  """
+  Уникальный идентификатор
+  При отсутствии будет создан автоматически
+  """
+  id: ID @validate(constraint: "mongodb")
+  """
+  Название отдела
+  """
+  title: String! @validate(constraint: "required,max=100,min=3")
+  """
+  Группы внутри отдела
+  Группы без идентификатора будут созданы
+  Непереданные группы, имевшиеся ранее в отделе, будут удалены
+  """
+  groups: [DepartmentGroupInput!]!
+    @validate(constraint: "required,dive,required")
+}
+
+extend type Query {
+  """
+  Получение списка отделов
+  """
+  departments(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+  ): DepartmentConnection! @auth
+
+  """
+  Получение отдела по идентификатору
+  """
+  department(
+    """
+    Уникальный идентификатор отдела
+    """
+    id: ID! @validate(constraint: "required,mongodb")
+  ): Department! @auth
+}
+
+extend type Mutation {
+  """
+  Сохранение отдела
+  """
+  saveDepartment(
+    """
+    Информация об отделе
+    """
+    input: DepartmentInput!
+  ): Boolean! @hasPermission(permission: "STAFF_SAVE_DEPARTMENT")
+
+  """
+  Удаление отдела
+  """
+  deleteDepartment(
+    """
+    Уникальный идентификатор
+    """
+    id: ID!
+  ): Boolean! @hasPermission(permission: "STAFF_DELETE_DEPARTMENT")
+}

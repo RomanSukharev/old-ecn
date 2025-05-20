@@ -1,0 +1,4 @@
+type Bank {
+    id: ID!
+    title: String
+}

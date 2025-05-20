@@ -1,0 +1,3 @@
+mutation archiveProperty($id: ID!) {
+  archiveProperty(id: $id)
+}

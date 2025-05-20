@@ -1,0 +1,51 @@
+query home {
+  complexes(limit: 6) {
+    nodes {
+      id
+      title
+      address
+      readinessQuarter
+      readinessYear
+      isReady
+      developer {
+        title
+      }
+      images {
+        url
+      }
+    }
+  }
+  
+  villages(limit: 30) {
+    nodes {
+      id
+      title
+      address
+      readinessQuarter
+      readinessYear
+      isReady
+      developer {
+        title
+      }
+      images {
+        url
+      }
+    }
+  }
+
+  employees(limit: 30) {
+    nodes {
+      id
+      name
+      surname
+      shortDescription
+      description
+      avatar {
+        url
+      }
+      publicImage {
+        url
+      }
+    }
+  }
+}

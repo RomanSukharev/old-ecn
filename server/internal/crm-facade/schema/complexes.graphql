@@ -1,0 +1,143 @@
+type Complex {
+  id: ID!
+
+  title: String!
+  description: String!
+  address: String!
+  lat: Float
+  lon: Float
+  cadastrNumber: String
+  seoText: String
+  youtubeLink: String
+  tourLink: String
+
+  inCity: Boolean
+  cityDistance: Int
+  region: String
+  subRegion: String
+
+  developer: Developer @goField(forceResolver: true)
+
+  isReady: Boolean
+  readinessQuarter: QuarterEnum
+  readinessYear: Int
+
+  images: [Image!] @goField(forceResolver: true)
+  documents: [Document!] @goField(forceResolver: true)
+  projectDeclarations: [Document!] @goField(forceResolver: true)
+
+  publicationStatus: PublicationStatusEnum
+
+  internalInfo: String
+
+  isDeleted: Boolean
+
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type ComplexConnection {
+  totalCount: Int!
+  edges: [ComplexEdge!]!
+  nodes: [Complex!]!
+  pageInfo: PageInfo!
+}
+
+type ComplexEdge {
+  node: Complex!
+  cursor: Cursor!
+}
+
+input ComplexInput {
+  id: ID @validate(constraint: "omitempty,mongodb")
+
+  title: String! @validate(constraint: "required,min=3,max=256")
+  description: String! @validate(constraint: "required,min=3,max=4096")
+  address: String! @validate(constraint: "required,min=3,max=256")
+  lat: Float @validate(constraint: "omitempty,latitude")
+  lon: Float @validate(constraint: "omitempty,longitude")
+  cadastrNumber: String @validate(constraint: "omitempty,max=20")
+  seoText: String @validate(constraint: "omitempty,max=1024")
+  youtubeLink: String @validate(constraint: "omitempty,url")
+  tourLink: String @validate(constraint: "omitempty,url")
+
+  inCity: Boolean @validate(constraint: "omitempty,boolean")
+  cityDistance: Int @validate(constraint: "omitempty,gte=0")
+  region: String @validate(constraint: "omitempty,max=256")
+  subRegion: String @validate(constraint: "omitempty,max=256")
+
+  developerID: ID @validate(constraint: "omitempty,mongodb")
+
+  isReady: Boolean @validate(constraint: "omitempty,boolean")
+  readinessQuarter: QuarterEnum @validate(constraint: "omitempty")
+  readinessYear: Int @validate(constraint: "omitempty,gte=1800,lte=3000")
+
+  images: [ImageInput!] @validate(constraint: "omitempty")
+  documents: [DocumentInput!] @validate(constraint: "omitempty")
+  projectDeclarations: [DocumentInput!] @validate(constraint: "omitempty")
+
+  publicationStatus: PublicationStatusEnum @validate(constraint: "omitempty")
+
+  internalInfo: String @validate(constraint: "omitempty,max=256")
+}
+
+input ComplexFilter {
+  developerID: ID @validate(constraint: "mongodb")
+  isDeleted: Boolean @validate(constraint: "boolean")
+  publicationStatus: PublicationStatusEnum
+  withPhotos: Boolean @validate(constraint: "boolean")
+}
+
+extend type Query {
+  """
+  Запрос списка ЖК
+  """
+  complexes(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "max=32")
+    """
+    Дополнительные параметры фильтрации
+    """
+    filter: ComplexFilter
+  ): ComplexConnection! @auth
+
+  """
+  Запрос ЖК по идентификатору
+  """
+  complex(id: ID! @validate(constraint: "required,mongodb")): Complex! @auth
+}
+
+extend type Mutation {
+  """
+  Создание/Редактирование ЖК
+  """
+  saveComplex(input: ComplexInput!): Boolean! @auth
+
+  """
+  Удаление ЖК по идентификатору
+  """
+  deleteComplex(id: ID!): Boolean! @auth
+
+  """
+  Массовое удаление ЖК по идентификаторам
+  """
+  bulkDeleteComplexes(ids: [ID!]!): Boolean! @auth
+}

@@ -1,0 +1,119 @@
+enum DealTypeEnum {
+    PURCHASE
+    SALE
+}
+
+enum DealStageEnum {
+    DEPOSIT_PREPARATION
+    DEPOSIT_PAID
+    SCHEDULED_FOR_DEAL
+    MFC_REGISTRATION
+    REGISTERED
+}
+
+type Deal {
+    id: ID! 
+    internalNumber: Int
+    type: DealTypeEnum
+    stage: DealStageEnum
+    sellerAgent: Employee
+    sellerContact: Contact
+    sellerPhone: String
+    sellerDocuments: [Document!]
+    buyerAgent: Employee
+    buyerContact: Contact
+    buyerPhone: String
+    buyerDocuments: [Document!]
+    property: Property
+    address: String
+    mortgageBroker: Employee
+    mortgageRequest: MortgageRequest
+    mortgageDocuments: [Document!]
+    lawer: Employee
+    lawerDocuments: [Document!]
+    accountant: Employee
+    accountantDocuments: [Document!]
+    depositDate: Time
+    dealDate: Time
+    finishedAt: Time
+    commissionAmount: Float
+    internalComment: String
+    isDeleted: Boolean
+    createdAt: Time!
+    updatedAt: Time!
+}
+
+type DealConnection {
+    totalCount: Int! 
+    edges: [DealEdge!]!
+    nodes: [Deal!]! 
+    pageInfo: PageInfo! 
+}
+
+type DealEdge {
+    node: Deal! 
+    cursor: Cursor! 
+}
+
+input DealInput {
+    id: ID @validate(constraint: "omitempty,mongodb")
+    type: DealTypeEnum @validate(constraint: "omitempty")
+    stage: DealStageEnum @validate(constraint: "omitempty")
+    sellerAgentID: ID @validate(constraint: "omitempty,mongodb")
+    sellerContactID: ID @validate(constraint: "omitempty,mongodb")
+    sellerPhone: String @validate(constraint: "required,len=11,startswith=8,number")
+    sellerDocuments: [DocumentInput!] @validate(constraint: "omitempty")
+    buyerAgentID: ID @validate(constraint: "omitempty,mongodb")
+    buyerContactID: ID @validate(constraint: "omitempty,mongodb")
+    buyerPhone: String @validate(constraint: "required,len=11,startswith=8,number")
+    buyerDocuments: [DocumentInput!] @validate(constraint: "omitempty")
+    propertyID: ID @validate(constraint: "omitempty,mongodb")
+    address: String @validate(constraint: "omitempty")
+    mortgageBrokerID: ID @validate(constraint: "omitempty,mongodb")
+    mortgageRequestID: ID @validate(constraint: "omitempty,mongodb")
+    mortgageDocuments: [DocumentInput!] @validate(constraint: "omitempty")
+    lawerID: ID @validate(constraint: "omitempty,mongodb")
+    lawerDocuments: [DocumentInput!] @validate(constraint: "omitempty")
+    accountantID: ID @validate(constraint: "omitempty,mongodb")
+    accountantDocuments: [DocumentInput!] @validate(constraint: "omitempty")
+    depositDate: Time @validate(constraint: "omitempty")
+    dealDate: Time @validate(constraint: "omitempty")
+    commissionAmount: Float @validate(constraint: "omitempty")
+    internalComment: String @validate(constraint: "max=4096,omitempty")
+}
+
+input DealFilter {
+    Type: DealTypeEnum @validate(constraint:"omitempty")
+    deal: ID @validate(constraint: "omitempty,mongodb")
+    stage: DealStageEnum @validate(constraint:"omitempty")
+    propertyType: PropertyTypeEnum @validate(constraint:"omitempty")
+    phone: String @validate(constraint: "len=11,startswith=8,number,omitempty")
+    employee: ID @validate (constraint: "mongodb,omitempty")
+    contact: ID @validate(constraint: "mongodb,omitempty")
+    isDeleted: Boolean @validate(constraint: "boolean,omitempty")
+    createdAtMin: Time @validate(constraint: "omitempty")
+    createdAtMax: Time @validate(constraint: "omitempty")
+    finishedAtMin: Time @validate(constraint: "omitempty")
+    finishedAtMax: Time @validate(constraint: "omitempty")
+}
+
+extend type Query {
+    deals(
+        ids: [ID!] @validate(constraint: "dive,omitempty,mongodb")
+        start: Int @validate(constraint: "number,gte=0,omitempty")
+        limit: Int @validate(constraint: "number,gte=1,omitemtpy")
+        sort: Sort @validate(constraint: "omitempty")
+        search: String @validate(constraint: "max=32,omitempty")
+        filter: DealFilter @validate(constraint: "omitempty")
+    ): DealConnection! @auth
+
+    deal(id: ID! @validate(constraint: "required,mongodb")): Deal! @auth
+}
+
+extend type Mutation {
+    saveDeal(input: DealInput!): Boolean! @auth
+    deleteDeal(id: ID! @validate(constraint: "required,mongodb")): Boolean! @auth
+    changeDealStage(id: ID! @validate(constraint: "required,mongodb"),stage: DealStageEnum! @validate(constraint: "required")): Boolean! @auth
+    bulkDeleteDeals(ids: [ID!]! @validate(constraint: "dive,required,mongodb")): Boolean! @auth
+    bulkChangeDealsStage(ids: [ID!]! @validate(constraint: "dive,required,mongodb"),stage: DealStageEnum! @validate(constraint: "required")): Boolean! @auth
+}

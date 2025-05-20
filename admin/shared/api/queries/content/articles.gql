@@ -1,0 +1,29 @@
+query articles(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $search: String
+  $sort: Sort
+  $filter: ArticlesFilterInput
+) {
+  articles(
+    ids: $ids
+    start: $start
+    limit: $limit
+    search: $search
+    sort: $sort
+    filter: $filter
+  ) {
+    totalCount
+    nodes {
+      id
+      title
+      status
+      cover {
+        url
+      }
+      createdAt
+      updatedAt
+    }
+  }
+}

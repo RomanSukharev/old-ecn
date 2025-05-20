@@ -1,0 +1,61 @@
+extend type Query {
+  generatePdf(content: String!, fileName: String!): String! @auth
+}
+
+extend type Mutation {
+  uploadImage(input: ImageInput!): Image! @auth
+  deleteImage(id: ID! @validate(constraint: "required,mongodb")): Boolean! @auth
+
+  uploadDocument(input: DocumentInput!): Document! @auth
+  deleteDocument(id: ID! @validate(constraint: "required,mongodb")): Boolean!
+    @auth
+}
+
+enum ImagePreset {
+  STAFF_EMPLOYEE_AVATAR
+  STAFF_EMPLOYEE_PUBLIC_IMAGE
+  #
+  CONTENT_KB_ARTICLE_COVER
+  CONTENT_SITE_STORY_COVER
+  CONTENT_SITE_STORY_PHOTO
+  #
+  ESTATE_PROPERTY_PHOTO
+  ESTATE_COMPLEX_PHOTO
+}
+
+input ImageInput {
+  id: ID
+  file: Upload
+  title: String @validate(constraint: "max=100,min=3")
+  preset: ImagePreset
+}
+
+input DocumentInput {
+  id: ID
+  file: Upload
+  title: String @validate(constraint: "max=100,min=3")
+}
+
+type Document {
+  id: ID!
+  url: String!
+  path: String!
+  title: String
+  fileName: String!
+  fileType: String!
+  createdAt: Time!
+}
+
+type Image {
+  id: ID!
+  url: String!
+  path: String!
+  title: String
+  fileName: String!
+  fileType: String!
+  previewUrl: String
+  previewPath: String
+  blurHash: String
+  preset: ImagePreset!
+  createdAt: Time!
+}

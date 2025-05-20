@@ -1,0 +1,25 @@
+query dashboard {
+  employees {
+    totalCount
+  }
+
+  roles {
+    totalCount
+  }
+
+  properties {
+    totalCount
+  }
+  
+  complexes {
+    totalCount
+  }
+  
+  villages {
+    totalCount
+  }
+  
+  developers {
+    totalCount
+  }
+}

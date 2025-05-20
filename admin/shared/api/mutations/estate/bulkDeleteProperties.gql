@@ -1,0 +1,3 @@
+mutation bulkDeleteProperties($ids: [ID!]!) {
+  bulkDeleteProperties(ids: $ids)
+}

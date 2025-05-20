@@ -1,0 +1,32 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+patches:
+  - path: admin-gql-facade-deployment.yaml
+  - path: admin-gql-facade-cm.yaml
+  - path: admin-gql-facade-ingress-route.yaml
+  - path: public-gql-facade-deployment.yaml
+  - path: public-gql-facade-cm.yaml
+  - path: public-gql-facade-ingress-route.yaml
+  - path: fe-admin-deployment.yaml
+  - path: fe-admin-cm.yaml
+  - path: fe-admin-ingress-route.yaml
+  - path: fe-public-deployment.yaml
+  - path: fe-public-cm.yaml
+  - path: fe-public-ingress-route.yaml
+
+namespace: ecn-demo
+
+images:
+  - name: fe-admin
+    newName: cr.selcloud.ru/pinks-agency/ecn-admin
+    newTag: latest
+  - name: fe-public
+    newName: cr.selcloud.ru/pinks-agency/ecn-public
+    newTag: latest
+  - name: backend
+    newName: cr.selcloud.ru/pinks-agency/ecn-server
+    newTag: latest

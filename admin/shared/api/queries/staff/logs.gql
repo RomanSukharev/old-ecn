@@ -1,0 +1,35 @@
+query logs(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $sort: Sort
+  $search: String
+  $filter: LogsFilterInput
+) {
+  logs(
+    ids: $ids
+    start: $start
+    limit: $limit
+    sort: $sort
+    search: $search
+    filter: $filter
+  ) {
+    totalCount
+    nodes {
+      id
+      eid
+      # collection
+      author {
+        id
+        name
+        surname
+      }
+      type
+      # success
+      level
+      # title
+      # details
+      createdAt
+    }
+  }
+}

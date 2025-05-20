@@ -1,0 +1,92 @@
+query meets(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $sort: Sort
+  $search: String
+  $filter: MeetFilter
+) {
+  meets(
+    ids: $ids
+    start: $start
+    limit: $limit
+    sort: $sort
+    search: $search
+    filter: $filter
+  ) {
+    totalCount  
+    nodes {
+      id
+      accountant {
+        id
+        name
+        surname
+        patronymic
+        phone
+      }
+      dateTime
+      internalNumber
+      isDeleted
+      isOnline
+      lawer {
+        id
+        name
+        surname
+        patronymic
+        phone
+      }
+      mortgageBroker {
+        id
+        name
+        surname
+        patronymic
+        phone
+      }
+      property {
+        id
+        title
+      }
+      sellerAgent {
+        id
+        name
+        surname
+        patronymic
+        phone
+      }
+      sellerContact {
+        id
+        name
+        surname
+        patronymic
+        phone
+      }
+      address
+      sellerPhone
+      status
+      type
+      updatedAt
+      useDealDeposit
+      useMortgage
+      buyerAgency
+      buyerAgent {
+        id
+        name
+        surname
+        patronymic
+        phone
+      }
+      buyerContact {
+        id
+        name
+        surname
+        patronymic
+        phone
+      }
+      buyerPhone
+      cancelReason
+      cancelReasonCustom
+      comment
+      createdAt
+    }
+  }
+}

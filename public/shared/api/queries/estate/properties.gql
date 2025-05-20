@@ -1,0 +1,101 @@
+query properties(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $sort: Sort
+  $search: String
+  $filter: PropertyFilter
+) {
+  properties(
+    ids: $ids
+    start: $start
+    limit: $limit
+    sort: $sort
+    search: $search
+    filter: $filter
+  ) {
+    totalCount
+    nodes {
+      id
+
+      internalID
+      deal
+      type
+      subType
+      commercialUsage
+
+      fromDeveloper
+
+      inComplex
+      complex {
+        id
+        title
+      }
+      complexHouse {
+        id
+        title
+      }
+
+      inVillage
+      village {
+        id
+        title
+      }
+
+      isHot
+
+      title
+      description
+      address
+      lat
+      lon
+      cadastrNumber
+      seoText
+      youtubeLink
+      tourLink
+
+      documents {
+        id
+        url
+        title
+      }
+      images {
+        id
+        url
+        title
+      }
+
+      refreshDate
+
+      price
+      pricePerMeter
+      pricePerAr
+
+      isReady
+      readinessYear
+      readinessQuarter
+
+      inCity
+      cityDistance
+      region
+      subRegion
+
+      rooms
+      area
+      landArea
+      livingArea
+      kitchenArea
+      toiletType
+      rehabType
+      floor
+      floors
+      ceilingHeight
+
+      comissionPercent
+      comissionAmount
+
+      createdAt
+      updatedAt
+    }
+  }
+}

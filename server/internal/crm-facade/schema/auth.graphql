@@ -1,0 +1,57 @@
+"""
+Результат аутентификации
+"""
+type LoginOutput {
+  """
+  JWT-токен пользователя
+  """
+  token: String!
+  """
+  Сведения о текущем пользователе
+  """
+  me: Me!
+}
+
+"""
+Сведения о текущем пользователе
+"""
+type Me {
+  """
+  Уникальный идентификатор
+  """
+  id: ID!
+  """
+  Имя пользователя
+  """
+  name: String
+  """
+  Фамилия пользователя
+  """
+  surname: String
+  """
+  Основное изображение профиля пользователя
+  """
+  avatar: Image
+}
+
+extend type Query {
+  """
+  Получение информации о текущем пользователе
+  """
+  me: Me! @auth
+}
+
+extend type Mutation {
+  """
+  Аутентификация по e-mail и паролю
+  """
+  login(
+    email: String! @validate(constraint: "required,email")
+    password: String! @validate(constraint: "required,min=4,max=32")
+  ): LoginOutput!
+
+  """
+  Выход из системы и завершение сессии пользователя
+  """
+  logout: Boolean! @auth
+}

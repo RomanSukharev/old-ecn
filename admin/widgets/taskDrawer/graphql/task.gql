@@ -1,0 +1,51 @@
+query task($id: ID!) {
+  task(id: $id) {
+    id
+    assignee {
+      id
+      name
+      surname
+      patronymic   
+    }
+    internalNumber
+    isCompleted
+    isDeleted
+    isHot
+    lead {
+      id
+      name
+      surname
+      patronymic   
+    }
+    property {
+      id
+      title
+    }
+    reporter {
+      id
+      name
+      surname
+      patronymic
+    }
+    startDate
+    tag
+    title
+    contact {
+      id
+      name
+      surname
+      patronymic
+    }
+    updatedAt
+    contactPhone
+    createdAt
+    deal {
+      id
+      internalNumber
+    }
+    details
+    durationDays
+    durationHours
+    endDate
+  }
+}

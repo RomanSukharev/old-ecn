@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fe-admin-env
+data:
+  NUXT_PUBLIC_API_URL: "https://ecn-admin-server.dev.pinkit.tech/graphql"
+  NUXT_PUBLIC_WEBSITE_URL: "https://ecn-public.dev.pinkit.tech"

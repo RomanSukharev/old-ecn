@@ -1,0 +1,3 @@
+mutation saveArticle($input: ArticleInput!) {
+  saveArticle(input: $input)
+}

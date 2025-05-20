@@ -1,0 +1,68 @@
+query meet($id: ID!) {
+  meet(id: $id) {
+    id
+    accountant {
+      id
+      name
+      surname
+      patronymic
+    }
+    dateTime
+    internalNumber
+    isDeleted
+    isOnline
+    lawer {
+      id
+      name
+      surname
+      patronymic
+    }
+    mortgageBroker {
+      id
+      name
+      surname
+      patronymic
+    }
+    property {
+      id
+      title
+    }
+    sellerAgent {
+      id
+      name
+      surname
+      patronymic
+    }
+    sellerContact {
+      id
+      name
+      surname
+      patronymic
+    }
+    address
+    sellerPhone
+    status
+    type
+    updatedAt
+    useDealDeposit
+    useMortgage
+    buyerAgency
+    buyerAgent {
+      id
+      name
+      surname
+      patronymic
+    }
+    buyerContact {
+      id
+      name
+      surname
+      patronymic
+    }
+    buyerPhone
+    cancelReason
+    cancelReasonCustom
+    comment
+    createdAt
+  }
+}

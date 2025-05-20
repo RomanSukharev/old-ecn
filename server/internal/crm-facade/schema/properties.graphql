@@ -1,0 +1,304 @@
+enum ToiletTypeEnum {
+  UNITED
+  SPLITTED
+}
+
+enum RehabTypeEnum {
+  NONE
+  DRAFT
+  DEVELOPER
+  DESIGN
+  CLEAN
+}
+
+enum PropertySourceEnum {
+  AVITO
+  YOULA
+  CIAN
+  DOMCLICK
+  YANDEX
+  OTHER_AGGREGATOR
+  RECOMMENDATION
+  RETURNED_CLIENT
+  LISTS
+  SELECTION
+  OTHER
+}
+
+enum PropertyStatusEnum {
+  PUBLISHED
+  UNPUBLISHED
+  ON_MODERATION
+  ARCHIVED
+  TRASH
+}
+
+enum PropertyTypeEnum {
+  USED
+  NEW
+  VILLAGE
+  SUBURBAN
+  COMMERCIAL
+}
+
+enum PropertySubTypeEnum {
+  FLAT
+  ROOM
+  APARTMENT
+  STUDIO
+  LAND
+  HOUSE
+  TOWNHOUSE
+  SUMMER_HOUSE
+  GARAGE
+  PARKING
+}
+
+enum CommercialUsageEnum {
+  RETAIL
+  OFFICE
+  FREE_USAGE
+  BASE
+  BUSINESS
+  PRODUCTION
+  PARKING
+  WAREHOUSE
+}
+
+enum DealEnum {
+  SELL
+  RENT
+}
+
+type Property {
+  id: ID!
+
+  internalID: Int
+  deal: DealEnum
+  type: PropertyTypeEnum
+  subType: PropertySubTypeEnum
+  commercialUsage: [CommercialUsageEnum]
+
+  fromDeveloper: Boolean
+
+  inComplex: Boolean
+  complex: Complex
+  complexHouse: ComplexHouse
+
+  inVillage: Boolean
+  village: Village
+
+  isHot: Boolean
+
+  title: String
+  description: String
+  address: String
+  lat: Float
+  lon: Float
+  cadastrNumber: String
+  seoText: String
+  youtubeLink: String
+  tourLink: String
+
+  documents: [Document]
+  images: [Image]
+
+  isDeleted: Boolean
+  isEditable: Boolean
+  refreshDate: Time
+
+  status: PropertyStatusEnum
+
+  price: Float
+  pricePerMeter: Float
+  pricePerAr: Float
+  priceHistory: [Float!]
+
+  isReady: Boolean
+  readinessYear: Int
+  readinessQuarter: QuarterEnum
+
+  inCity: Boolean
+  cityDistance: Int
+  region: String
+  subRegion: String
+
+  source: PropertySourceEnum
+
+  rooms: Int
+  area: Float
+  landArea: Float
+  livingArea: Float
+  kitchenArea: Float
+  toiletType: ToiletTypeEnum
+  rehabType: RehabTypeEnum
+  floor: Int
+  floors: Int
+  ceilingHeight: Float
+
+  internalInfo: String
+
+  comissionPercent: Float
+  comissionAmount: Float
+
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type PropertyConnection {
+  totalCount: Int!
+  edges: [PropertyEdge!]!
+  nodes: [Property!]!
+  pageInfo: PageInfo!
+}
+
+type PropertyEdge {
+  node: Property!
+  cursor: Cursor!
+}
+
+input PropertyInput {
+  id: ID @validate(constraint: "mongodb")
+
+  deal: DealEnum @validate(constraint: "omitempty")
+  type: PropertyTypeEnum @validate(constraint: "omitempty")
+  subType: PropertySubTypeEnum @validate(constraint: "omitempty")
+  commercialUsage: [CommercialUsageEnum!]
+
+  fromDeveloper: Boolean @validate(constraint: "omitempty,boolean")
+
+  inComplex: Boolean @validate(constraint: "omitempty,boolean")
+  complexID: ID @validate(constraint: "mongodb")
+  complexHouseID: ID @validate(constraint: "mongodb")
+
+  inVillage: Boolean @validate(constraint: "omitempty,boolean")
+  villageID: ID @validate(constraint: "mongodb")
+
+  isHot: Boolean @validate(constraint: "omitempty,boolean")
+
+  title: String @validate(constraint: "required,min=3,max=256")
+  description: String @validate(constraint: "required,min=3,max=4096")
+  address: String @validate(constraint: "required,min=3,max=256")
+  lat: Float @validate(constraint: "omitempty,latitude")
+  lon: Float @validate(constraint: "omitempty,longitude")
+  cadastrNumber: String @validate(constraint: "omitempty,max=20")
+  seoText: String @validate(constraint: "omitempty,max=1024")
+  youtubeLink: String @validate(constraint: "omitempty,url")
+  tourLink: String @validate(constraint: "omitempty,url")
+
+  documents: [DocumentInput]
+  images: [ImageInput]
+
+  status: PropertyStatusEnum @validate(constraint: "omitempty")
+
+  price: Float @validate(constraint: "omitempty,gte=0")
+
+  isReady: Boolean @validate(constraint: "omitempty,boolean")
+  readinessYear: Int @validate(constraint: "omitempty,gte=1800,lte=3000")
+  readinessQuarter: QuarterEnum @validate(constraint: "omitempty")
+
+  inCity: Boolean @validate(constraint: "omitempty,boolean")
+  cityDistance: Int @validate(constraint: "omitempty,gte=0")
+  region: String @validate(constraint: "omitempty,max=256")
+  subRegion: String @validate(constraint: "omitempty,max=256")
+
+  source: PropertySourceEnum @validate(constraint: "omitempty")
+
+  rooms: Int @validate(constraint: "omitempty,gte=0")
+  area: Float @validate(constraint: "omitempty,gte=0")
+  landArea: Float @validate(constraint: "omitempty,gte=0")
+  livingArea: Float @validate(constraint: "omitempty,gte=0")
+  kitchenArea: Float @validate(constraint: "omitempty,gte=0")
+  toiletType: ToiletTypeEnum @validate(constraint: "omitempty")
+  rehabType: RehabTypeEnum @validate(constraint: "omitempty")
+  floor: Int @validate(constraint: "omitempty")
+  floors: Int @validate(constraint: "omitempty,gte=0")
+  ceilingHeight: Float @validate(constraint: "omitempty,gte=0")
+
+  internalInfo: String @validate(constraint: "omitempty,max=4096")
+
+  comissionPercent: Float @validate(constraint: "omitempty,gte=0")
+  comissionAmount: Float @validate(constraint: "omitempty,gte=0")
+}
+
+input PropertyFilter {
+  deal: DealEnum
+  type: PropertyTypeEnum
+  subType: PropertySubTypeEnum
+  fromDeveloper: Boolean @validate(constraint: "boolean")
+  complexID: String @validate(constraint: "mongodb")
+  complexHouseID: String @validate(constraint: "mongodb")
+  villageID: String @validate(constraint: "mongodb")
+  isHot: Boolean @validate(constraint: "boolean")
+  isDeleted: Boolean @validate(constraint: "boolean")
+  statuses: [PropertyStatusEnum!]
+  isStudio: Boolean @validate(constraint: "boolean")
+  minRooms: Float @validate(constraint: "gte=0")
+  maxRooms: Float @validate(constraint: "gte=0")
+  minPrice: Float @validate(constraint: "gte=0")
+  maxPrice: Float @validate(constraint: "gte=0")
+  minPricePerMeter: Float @validate(constraint: "gte=0")
+  maxPricePerMeter: Float @validate(constraint: "gte=0")
+  minPricePerAr: Float @validate(constraint: "gte=0")
+  maxPricePerAr: Float @validate(constraint: "gte=0")
+  minArea: Float @validate(constraint: "gte=0")
+  maxArea: Float @validate(constraint: "gte=0")
+  minLandArea: Float @validate(constraint: "gte=0")
+  maxLandArea: Float @validate(constraint: "gte=0")
+  isReady: Boolean @validate(constraint: "boolean")
+  inCity: Boolean @validate(constraint: "boolean")
+  minCityDistance: Int @validate(constraint: "gte=0")
+  maxCityDistance: Int @validate(constraint: "gte=0")
+  minCreatedAt: Time
+  maxCreatedAt: Time
+  withPhotos: Boolean @validate(constraint: "boolean")
+}
+
+extend type Query {
+  properties(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+    """
+    Дополнительные параметры фильтрации
+    """
+    filter: PropertyFilter
+  ): PropertyConnection! @auth
+
+  property(id: ID! @validate(constraint: "required,mongodb")): Property! @auth
+}
+
+extend type Mutation {
+  saveProperty(input: PropertyInput!): Boolean! @auth
+  deleteProperty(id: ID!): Boolean! @auth
+  refreshProperty(id: ID!): Boolean! @auth
+  approveProperty(id: ID!): Boolean! @auth
+  declineProperty(id: ID!): Boolean! @auth
+  archiveProperty(id: ID!): Boolean! @auth
+
+  """
+  Массовое удаление объектов по идентификаторам
+  """
+  bulkDeleteProperties(ids: [ID!]!): Boolean! @auth
+  bulkRefreshProperties(ids: [ID!]!): Boolean! @auth
+  bulkApproveProperties(ids: [ID!]!): Boolean! @auth
+  bulkDeclineProperties(ids: [ID!]!): Boolean! @auth
+  bulkArchiveProperties(ids: [ID!]!): Boolean! @auth
+}

@@ -1,0 +1,3 @@
+mutation saveDeveloper($input: DeveloperInput!) {
+  saveDeveloper(input: $input)
+}

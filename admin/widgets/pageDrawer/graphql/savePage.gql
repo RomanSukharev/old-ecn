@@ -1,0 +1,3 @@
+mutation savePage($input: PageInput!) {
+  savePage(input: $input)
+}

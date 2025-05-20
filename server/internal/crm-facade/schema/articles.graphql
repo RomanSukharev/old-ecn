@@ -1,0 +1,92 @@
+#
+# Выходные типы
+#
+
+type Article {
+  id: ID!
+  group: ArticleGroup @goField(forceResolver: true)
+  title: String!
+  contentBlocks: [ContentBlock!]!
+  status: PublicationStatusEnum!
+  cover: Image @goField(forceResolver: true)
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+#
+# Выдача списочного результата
+#
+
+type ArticleConnection {
+  totalCount: Int!
+  edges: [ArticleEdge!]!
+  nodes: [Article!]!
+  pageInfo: PageInfo!
+}
+
+type ArticleEdge {
+  node: Article!
+  cursor: Cursor!
+}
+
+#
+# Входные типы
+#
+
+input ArticlesFilterInput {
+  groupID: ID @validate(constraint: "mongodb")
+  status: PublicationStatusEnum
+}
+
+input ArticleInput {
+  """
+  Уникальный идентификатор
+  При отсутствии будет создан автоматически
+  """
+  id: ID @validate(constraint: "mongodb")
+  groupID: ID!
+  title: String!
+  contentBlocks: [ContentBlockInput!]!
+  status: PublicationStatusEnum!
+  cover: ImageInput @goField(forceResolver: true)
+}
+
+#
+# Структура запросов
+#
+
+extend type Query {
+  articles(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+    filter: ArticlesFilterInput
+  ): ArticleConnection! @auth
+
+  article(id: ID! @validate(constraint: "required,mongodb")): Article! @auth
+}
+
+extend type Mutation {
+  saveArticle(input: ArticleInput!): Boolean!
+    @hasPermission(permission: "CONTENT_SAVE_ARTICLE")
+
+  deleteArticle(id: ID!): Boolean!
+    @hasPermission(permission: "CONTENT_DELETE_ARTICLE")
+}

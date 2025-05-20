@@ -1,0 +1,3 @@
+mutation saveArticleGroup($input: ArticleGroupInput!) {
+  saveArticleGroup(input: $input)
+}

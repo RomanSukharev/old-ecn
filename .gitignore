@@ -1,0 +1,10 @@
+# IDE custom files (remove the comment below to include it)
+.idea/
+.vscode/
+.history/
+
+# Backups
+*.bkp
+
+.env
+*.dtmp

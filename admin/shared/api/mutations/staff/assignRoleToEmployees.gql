@@ -1,0 +1,3 @@
+mutation assignRoleToEmployees($role: ID!, $ids: [ID!]!) {
+  assignRoleToEmployees(role: $role, ids: $ids)
+}

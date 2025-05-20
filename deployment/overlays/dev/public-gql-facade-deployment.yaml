@@ -1,0 +1,8 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: public-gql-facade
+  labels:
+    app: public-gql-facade
+  annotations:
+    link.argocd.argoproj.io/external-link: https://ecn-public-server.dev.pinkit.tech/

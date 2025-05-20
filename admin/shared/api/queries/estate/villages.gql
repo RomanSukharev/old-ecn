@@ -1,0 +1,56 @@
+query villages(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $sort: Sort
+  $search: String
+  $filter: VillageFilter
+) {
+  villages(
+    ids: $ids
+    start: $start
+    limit: $limit
+    sort: $sort
+    search: $search
+    filter: $filter
+  ) {
+    totalCount
+    nodes {
+      id
+
+      title
+      description
+      address
+      lat
+      lon
+      cadastrNumber
+
+      inCity
+      cityDistance
+
+      developer {
+        id
+        title
+      }
+
+      isReady
+      readinessQuarter
+      readinessYear
+
+      images {
+        id
+        url
+        title
+      }
+
+      publicationStatus
+
+      internalInfo
+
+      isDeleted
+
+      createdAt
+      updatedAt
+    }
+  }
+}

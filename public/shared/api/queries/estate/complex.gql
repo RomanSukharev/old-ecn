@@ -1,0 +1,52 @@
+query complex($id: ID!) {
+  complex(id: $id) {
+    id
+
+    title
+    description
+    address
+    lat
+    lon
+    cadastrNumber
+    seoText
+    youtubeLink
+    tourLink
+
+    inCity
+    cityDistance
+    region
+    subRegion
+
+    developer {
+      id
+      title
+    }
+
+    isReady
+    readinessQuarter
+    readinessYear
+
+    images {
+      id
+      url
+      title
+    }
+
+    documents {
+      id
+      url
+      title
+      fileName
+    }
+
+    projectDeclarations {
+      id
+      url
+      title
+      fileName
+    }
+    
+    createdAt
+    updatedAt
+  }
+}

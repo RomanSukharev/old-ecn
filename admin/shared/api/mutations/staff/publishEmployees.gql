@@ -1,0 +1,3 @@
+mutation publishEmployees($ids: [ID!]!) {
+  publishEmployees(ids: $ids)
+}

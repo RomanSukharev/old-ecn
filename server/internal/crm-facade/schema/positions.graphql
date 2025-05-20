@@ -1,0 +1,136 @@
+"""
+Должность
+"""
+type Position {
+  """
+  Уникальный идентификатор
+  """
+  id: ID!
+  """
+  Название должности
+  """
+  title: String!
+  """
+  Дата и время создания
+  """
+  createdAt: Time!
+  """
+  Дата и время обновления
+  """
+  updatedAt: Time!
+}
+
+#
+# Выдача списочного результата
+#
+
+"""
+Результат списочного метода
+"""
+type PositionConnection {
+  """
+  Общее количество записей
+  """
+  totalCount: Int!
+  """
+  Конечные точки
+  """
+  edges: [PositionEdge!]!
+  """
+  Объекты
+  """
+  nodes: [Position!]!
+  """
+  Информация для постраничной навигации
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+Конечная точка
+"""
+type PositionEdge {
+  """
+  Объект
+  """
+  node: Position!
+  """
+  Курсор (идентификатор объекта)
+  """
+  cursor: Cursor!
+}
+
+"""
+Входные параметры для должности
+"""
+input PositionInput {
+  """
+  Уникальный идентифкатор
+  При отсутствии будет создан автоматически
+  """
+  id: ID @validate(constraint: "mongodb")
+  """
+  Название должности
+  """
+  title: String! @validate(constraint: "required,max=100,min=3")
+}
+
+extend type Query {
+  """
+  Получение списка должностей
+  """
+  positions(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+  ): PositionConnection! @auth
+
+  """
+  Получение должности по идентификатору
+  """
+  position(
+    """
+    Уникальный идентификатор
+    """
+    id: ID! @validate(constraint: "required,mongodb")
+  ): Position! @auth
+}
+
+extend type Mutation {
+  """
+  Сохранение должности
+  """
+  savePosition(
+    """
+    Информация о должности
+    """
+    input: PositionInput!
+  ): Boolean! @hasPermission(permission: "STAFF_SAVE_POSITION")
+
+  """
+  Удаление должности
+  """
+  deletePosition(
+    """
+    Уникальный идентификатор
+    """
+    id: ID!
+  ): Boolean! @hasPermission(permission: "STAFF_DELETE_POSITION")
+}

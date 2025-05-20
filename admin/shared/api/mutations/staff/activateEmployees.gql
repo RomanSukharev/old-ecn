@@ -1,0 +1,3 @@
+mutation activateEmployees($ids: [ID!]!) {
+  activateEmployees(ids: $ids)
+}

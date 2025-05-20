@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-gql-facade
+
+spec:
+  ports:
+    - protocol: TCP
+      name: web
+      port: 8000
+  selector:
+    app: admin-gql-facade

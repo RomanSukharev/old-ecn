@@ -1,0 +1,63 @@
+query employees(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $search: String
+  $sort: Sort
+  $filter: EmployeesFilterInput
+) {
+  employees(
+    ids: $ids
+    start: $start
+    limit: $limit
+    search: $search
+    sort: $sort
+    filter: $filter
+  ) {
+    totalCount
+    nodes {
+      id
+      name
+      surname
+      patronymic
+      birthday
+      email
+      phone
+      position {
+        id
+        title
+      }
+      department {
+        id
+        title
+      }
+      group {
+        id
+        title
+      }
+      role {
+        id
+        title
+        permissions
+      }
+      internalInfo
+      shortDescription
+      description
+      isPublished
+      avatar {
+        id
+        url
+        path
+        title
+        fileName
+        fileType
+        previewUrl
+        previewPath
+        blurHash
+        preset
+      }
+      createdAt
+      updatedAt
+    }
+  }
+}

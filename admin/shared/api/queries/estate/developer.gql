@@ -1,0 +1,11 @@
+query developer($id: ID!) {
+  developer(id: $id) {
+    id
+
+    title
+    url
+    
+    createdAt
+    updatedAt
+  }
+}

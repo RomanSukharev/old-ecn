@@ -1,0 +1,34 @@
+query stories(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $search: String
+  $sort: Sort
+) {
+  stories(
+    ids: $ids
+    start: $start
+    limit: $limit
+    search: $search
+    sort: $sort
+  ) {
+    totalCount
+    nodes {
+      id
+      category
+      title
+      teaser
+      contentBlocks {
+        type
+        data
+        isVisible
+      }
+      cover {
+        id
+        url
+      }
+      createdAt
+      updatedAt
+    }
+  }
+}

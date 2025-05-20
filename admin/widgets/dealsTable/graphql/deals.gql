@@ -1,0 +1,62 @@
+query deals(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $sort: Sort
+  $search: String
+  $filter: DealFilter
+) {
+  deals(
+    ids: $ids
+    start: $start
+    limit: $limit
+    sort: $sort
+    search: $search
+    filter: $filter
+  ) {
+    totalCount
+    nodes {
+      id
+      internalNumber
+      type
+      stage
+      depositDate
+      internalComment
+      isDeleted
+      sellerPhone
+      sellerContact {
+        id
+        name
+        surname
+        patronymic
+      }
+      buyerContact {
+        id
+        name
+        surname
+        patronymic
+      }
+      property {
+        id
+        title
+      }
+      sellerAgent {
+        id
+        name
+        surname
+      }
+      buyerAgent {
+        id
+        name
+        surname
+      }
+      address
+      buyerPhone
+      commissionAmount
+      dealDate
+      finishedAt
+      createdAt
+      updatedAt
+    }
+  }
+}

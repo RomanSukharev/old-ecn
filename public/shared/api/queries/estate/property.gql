@@ -1,0 +1,92 @@
+query property($id: ID!) {
+  property(id: $id) {
+    id
+
+    internalID
+    deal
+    type
+    subType
+    commercialUsage
+
+    fromDeveloper
+
+    inComplex
+    complex {
+      id
+      title
+      images {
+        id
+        url
+      }
+    }
+    complexHouse {
+      id
+      title
+    }
+
+    inVillage
+    village {
+      id
+      title
+      images {
+        id
+        url
+      }
+    }
+
+    isHot
+
+    title
+    description
+    address
+    lat
+    lon
+    cadastrNumber
+    seoText
+    youtubeLink
+    tourLink
+
+    documents {
+      id
+      url
+      title
+    }
+    images {
+      id
+      url
+      title
+    }
+
+    refreshDate
+
+    price
+    pricePerMeter
+    pricePerAr
+
+    isReady
+    readinessYear
+    readinessQuarter
+
+    inCity
+    cityDistance
+    region
+    subRegion
+
+    rooms
+    area
+    landArea
+    livingArea
+    kitchenArea
+    toiletType
+    rehabType
+    floor
+    floors
+    ceilingHeight
+
+    comissionPercent
+    comissionAmount
+
+    createdAt
+    updatedAt
+  }
+}

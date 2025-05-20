@@ -1,0 +1,8 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: fe-admin
+  labels:
+    app: fe-admin
+  annotations:
+    link.argocd.argoproj.io/external-link: https://ecn-admin.demo.pinkit.tech/

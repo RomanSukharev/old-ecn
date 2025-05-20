@@ -1,0 +1,208 @@
+enum ToiletTypeEnum {
+  UNITED
+  SPLITTED
+}
+
+enum RehabTypeEnum {
+  NONE
+  DRAFT
+  DEVELOPER
+  DESIGN
+  CLEAN
+}
+
+enum PropertySourceEnum {
+  AVITO
+  YOULA
+  CIAN
+  DOMCLICK
+  YANDEX
+  OTHER_AGGREGATOR
+  RECOMMENDATION
+  RETURNED_CLIENT
+  LISTS
+  SELECTION
+  OTHER
+}
+
+enum PropertyStatusEnum {
+  PUBLISHED
+  UNPUBLISHED
+  ON_MODERATION
+  ARCHIVED
+  TRASH
+}
+
+enum PropertyTypeEnum {
+  USED
+  NEW
+  VILLAGE
+  SUBURBAN
+  COMMERCIAL
+}
+
+enum PropertySubTypeEnum {
+  FLAT
+  ROOM
+  APARTMENT
+  STUDIO
+  LAND
+  HOUSE
+  TOWNHOUSE
+  SUMMER_HOUSE
+  GARAGE
+  PARKING
+}
+
+enum CommercialUsageEnum {
+  RETAIL
+  OFFICE
+  FREE_USAGE
+  BASE
+  BUSINESS
+  PRODUCTION
+  PARKING
+  WAREHOUSE
+}
+
+enum DealEnum {
+  SELL
+  RENT
+}
+
+type Property {
+  id: ID!
+
+  internalID: Int
+  deal: DealEnum
+  type: PropertyTypeEnum
+  subType: PropertySubTypeEnum
+  commercialUsage: [CommercialUsageEnum]
+
+  fromDeveloper: Boolean
+
+  inComplex: Boolean
+  complex: Complex
+  complexHouse: ComplexHouse
+
+  inVillage: Boolean
+  village: Village
+
+  isHot: Boolean
+
+  title: String
+  description: String
+  address: String
+  lat: Float
+  lon: Float
+  cadastrNumber: String
+  seoText: String
+  youtubeLink: String
+  tourLink: String
+
+  documents: [Document]
+  images: [Image]
+
+  refreshDate: Time
+
+  price: Float
+  pricePerMeter: Float
+  pricePerAr: Float
+
+  isReady: Boolean
+  readinessYear: Int
+  readinessQuarter: QuarterEnum
+
+  inCity: Boolean
+  cityDistance: Int
+  region: String
+  subRegion: String
+
+  rooms: Int
+  area: Float
+  landArea: Float
+  livingArea: Float
+  kitchenArea: Float
+  toiletType: ToiletTypeEnum
+  rehabType: RehabTypeEnum
+  floor: Int
+  floors: Int
+  ceilingHeight: Float
+
+  comissionPercent: Float
+  comissionAmount: Float
+
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type PropertyConnection {
+  totalCount: Int!
+  edges: [PropertyEdge!]!
+  nodes: [Property!]!
+  pageInfo: PageInfo!
+}
+
+type PropertyEdge {
+  node: Property!
+  cursor: Cursor!
+}
+
+input PropertyFilter {
+  deal: DealEnum
+  type: PropertyTypeEnum
+  subType: PropertySubTypeEnum
+  fromDeveloper: Boolean @validate(constraint: "boolean")
+  complexID: String @validate(constraint: "mongodb")
+  complexHouseID: String @validate(constraint: "mongodb")
+  villageID: String @validate(constraint: "mongodb")
+  isHot: Boolean @validate(constraint: "boolean")
+  minRooms: Float @validate(constraint: "gte=0")
+  maxRooms: Float @validate(constraint: "gte=0")
+  minPrice: Float @validate(constraint: "gte=0")
+  maxPrice: Float @validate(constraint: "gte=0")
+  minPricePerMeter: Float @validate(constraint: "gte=0")
+  maxPricePerMeter: Float @validate(constraint: "gte=0")
+  minPricePerAr: Float @validate(constraint: "gte=0")
+  maxPricePerAr: Float @validate(constraint: "gte=0")
+  minArea: Float @validate(constraint: "gte=0")
+  maxArea: Float @validate(constraint: "gte=0")
+  minLandArea: Float @validate(constraint: "gte=0")
+  maxLandArea: Float @validate(constraint: "gte=0")
+  isReady: Boolean @validate(constraint: "boolean")
+  inCity: Boolean @validate(constraint: "boolean")
+  minCityDistance: Int @validate(constraint: "gte=0")
+  maxCityDistance: Int @validate(constraint: "gte=0")
+  withPhotos: Boolean @validate(constraint: "boolean")
+}
+
+extend type Query {
+  properties(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+    """
+    Дополнительные параметры фильтрации
+    """
+    filter: PropertyFilter
+  ): PropertyConnection!
+
+  property(id: ID! @validate(constraint: "required,mongodb")): Property!
+}

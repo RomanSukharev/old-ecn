@@ -1,0 +1,3 @@
+mutation bulkRefreshProperties($ids: [ID!]!) {
+  bulkRefreshProperties(ids: $ids)
+}

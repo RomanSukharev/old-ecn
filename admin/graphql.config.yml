@@ -1,0 +1,8 @@
+# Конфигурация для плагинов поддержки graphQL
+# VSCode - https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql
+# WebStorm - https://plugins.jetbrains.com/plugin/8097-graphql
+
+projects:
+  default:
+    schema: shared/api/schema.json
+    documents: ./**/*.gql

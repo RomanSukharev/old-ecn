@@ -1,0 +1,3 @@
+mutation bulkDeleteTasks($ids: [ID!]!) {
+  bulkDeleteTasks(ids: $ids)
+}

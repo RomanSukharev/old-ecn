@@ -1,0 +1,8 @@
+query articleGroup($id: ID!) {
+  articleGroup(id: $id) {
+    id
+    title
+    createdAt
+    updatedAt
+  }
+}

@@ -1,0 +1,3 @@
+mutation approveProperty($id: ID!) {
+  approveProperty(id: $id)
+}

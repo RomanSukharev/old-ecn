@@ -1,0 +1,104 @@
+type Page {
+  id: ID!
+  url: String!
+  title: String!
+  description: String!
+  contentBlocks: [ContentBlock!]!
+  status: PublicationStatusEnum!
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+#
+# Выдача списочного результата
+#
+
+type PageConnection {
+  totalCount: Int!
+  edges: [PageEdge!]!
+  nodes: [Page!]!
+  pageInfo: PageInfo!
+}
+
+type PageEdge {
+  node: Page!
+  cursor: Cursor!
+}
+
+input PageFilterInput {
+  status: PublicationStatusEnum
+}
+
+input PageInput {
+  """
+  Уникальный идентификатор
+  При отсутствии будет создан автоматически
+  """
+  id: ID @validate(constraint: "mongodb")
+  url: String!
+  title: String!
+  description: String!
+  contentBlocks: [ContentBlockInput!]!
+  status: PublicationStatusEnum!
+}
+
+extend type Query {
+  """
+  Получение списка страниц
+  """
+  pages(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+    filter: PageFilterInput
+  ): PageConnection! @auth
+
+  """
+  Получение страницы по идентификатору
+  """
+  page(
+    """
+    Уникальный идентификатор
+    """
+    id: ID! @validate(constraint: "required,mongodb")
+  ): Page! @auth
+}
+
+extend type Mutation {
+  """
+  Сохранение страницы
+  """
+  savePage(
+    """
+    Информация о странице
+    """
+    input: PageInput!
+  ): Boolean! @hasPermission(permission: "CONTENT_SAVE_PAGE")
+
+  """
+  Удаление страницы
+  """
+  deletePage(
+    """
+    Уникальный идентификатор
+    """
+    id: ID!
+  ): Boolean! @hasPermission(permission: "CONTENT_DELETE_PAGE")
+}

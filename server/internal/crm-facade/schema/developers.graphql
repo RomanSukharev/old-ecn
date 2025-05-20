@@ -1,0 +1,86 @@
+type Developer {
+  id: ID!
+
+  title: String!
+  url: String
+  logo: Image
+  isDeleted: Boolean
+
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type DeveloperConnection {
+  totalCount: Int!
+  edges: [DeveloperEdge!]!
+  nodes: [Developer!]!
+  pageInfo: PageInfo!
+}
+
+type DeveloperEdge {
+  node: Developer!
+  cursor: Cursor!
+}
+
+input DeveloperInput {
+  id: ID @validate(constraint: "mongodb")
+
+  title: String! @validate(constraint: "required,min=3,max=500")
+  url: String @validate(constraint: "omitempty,url")
+  logo: ImageInput
+}
+
+input DeveloperFilterInput {
+  isDeleted: Boolean @validate(constraint: "boolean")
+}
+
+extend type Query {
+  """
+  Запрос списка застройщиков
+  """
+  developers(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+    filter: DeveloperFilterInput
+  ): DeveloperConnection! @auth
+
+  """
+  Запрос застройщика по идентификатору
+  """
+  developer(id: ID! @validate(constraint: "required,mongodb")): Developer! @auth
+}
+
+extend type Mutation {
+  """
+  Создание/Редактирование застройщика
+  """
+  saveDeveloper(input: DeveloperInput!): Boolean! @auth
+
+  """
+  Удаление застройщика по идентификатору
+  """
+  deleteDeveloper(id: ID!): Boolean! @auth
+
+  """
+  Массовое удаление застройщиков по идентификаторам
+  """
+  bulkDeleteDevelopers(ids: [ID!]!): Boolean! @auth
+}

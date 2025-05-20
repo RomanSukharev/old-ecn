@@ -1,0 +1,57 @@
+query mortgageRequest($id: ID!) {
+  mortgageRequest(id: $id) {
+    id
+    internalNumber
+    status
+    agent {
+      id
+      name
+      surname
+      patronymic
+    }
+    mortgageBroker {
+      id
+      name
+      surname
+      patronymic
+    }
+    percentage
+    period
+    property {
+      id
+      title
+    }
+    responseDate
+    sendDate
+    amount
+    firstDeposit
+    validTillDate
+    banks {
+      id
+      title
+    }
+    comment
+    contact {
+      id
+      name
+      surname
+      patronymic
+    }
+    contracts {
+      id
+      url
+      title
+    }
+    deal {
+      id
+      internalNumber
+    }
+    documents {
+      id
+      url
+      title
+    }
+    createdAt
+    updatedAt
+  }
+}

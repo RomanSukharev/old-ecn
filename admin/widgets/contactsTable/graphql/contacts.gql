@@ -1,0 +1,67 @@
+query contacts(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $sort: Sort
+  $search: String
+  $filter: ContactFilter
+) {
+  contacts(
+    ids: $ids
+    start: $start
+    limit: $limit
+    sort: $sort
+    search: $search
+    filter: $filter
+  ) {
+    totalCount
+    nodes {
+      id
+      internalNumber
+      name
+      surname
+      address
+      properties {
+        id
+        title
+      }
+      agents {
+        id
+        name
+        surname
+        patronymic
+      }
+      patronymic
+      phone
+      additionalPhones
+      additionalPhones
+      documents {
+        id
+        title
+        # url
+      }
+
+      contracts {
+        id
+        title
+        # url
+      }
+      email
+      source
+      type
+      agents {
+        id
+        name
+        surname
+        patronymic
+      }
+      company
+      passportNumber
+      passportIssuedBy
+      passportIssuerCode
+      note
+      createdAt
+      updatedAt
+    }
+  }
+}

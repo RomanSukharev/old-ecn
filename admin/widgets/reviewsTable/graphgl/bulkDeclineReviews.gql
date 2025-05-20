@@ -1,0 +1,3 @@
+mutation bulkDeclineReviews($ids: [ID!]!) {
+  bulkDeclineReviews(ids: $ids)
+}

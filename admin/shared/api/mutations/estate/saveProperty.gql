@@ -1,0 +1,3 @@
+mutation saveProperty($input: PropertyInput!) {
+  saveProperty(input: $input)
+}

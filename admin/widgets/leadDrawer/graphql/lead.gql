@@ -1,0 +1,28 @@
+query lead($id: ID!) {
+  lead(id: $id) {
+    id
+    internalNumber
+    name
+    surname
+    patronymic
+    phone
+    additionalPhones
+    email
+    request
+    source
+    status
+    type
+    address
+    agents {
+      id
+      name
+      surname
+      patronymic
+    }
+    company
+    birthday
+    comment
+    createdAt
+    updatedAt
+  }
+}

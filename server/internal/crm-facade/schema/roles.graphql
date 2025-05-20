@@ -1,0 +1,176 @@
+"""
+Роль
+"""
+type Role {
+  """
+  Уникальный идентифкатор
+  """
+  id: ID!
+  """
+  Название роли
+  """
+  title: String!
+  """
+  Набор доступных полномочий в виде массива строк
+  """
+  permissions: [RolePermissionsEnum!]!
+  """
+  Дата и время создания
+  """
+  createdAt: Time!
+  """
+  Дата и время обновления
+  """
+  updatedAt: Time!
+}
+
+#
+# Выдача списочного результата
+#
+
+"""
+Результат списочного метода
+"""
+type RoleConnection {
+  """
+  Общее количество записей
+  """
+  totalCount: Int!
+  """
+  Конечные точки
+  """
+  edges: [RoleEdge!]!
+  """
+  Объекты
+  """
+  nodes: [Role!]!
+  """
+  Информация для постраничной навигации
+  """
+  pageInfo: PageInfo!
+}
+
+"""
+Конечная точка
+"""
+type RoleEdge {
+  """
+  Объект
+  """
+  node: Role!
+  """
+  Курсор (идентификатор объекта)
+  """
+  cursor: Cursor!
+}
+
+"""
+Список доступных разрешений
+"""
+enum RolePermissionsEnum {
+  STAFF_SAVE_EMPLOYEE
+  STAFF_SAVE_POSITION
+  STAFF_SAVE_DEPARTMENT
+  STAFF_SAVE_ROLE
+
+  STAFF_DELETE_EMPLOYEE
+  STAFF_DELETE_POSITION
+  STAFF_DELETE_DEPARTMENT
+  STAFF_DELETE_ROLE
+
+  CONTENT_SAVE_ARTICLE
+  CONTENT_SAVE_ARTICLE_GROUP
+  CONTENT_SAVE_PAGE
+  CONTENT_SAVE_REVIEW
+  CONTENT_SAVE_STORY
+  CONTENT_SAVE_VACANCY
+
+  CONTENT_DELETE_ARTICLE
+  CONTENT_DELETE_ARTICLE_GROUP
+  CONTENT_DELETE_PAGE
+  CONTENT_DELETE_REVIEW
+  CONTENT_DELETE_STORY
+  CONTENT_DELETE_VACANCY
+
+  SYSTEM_VIEW_LOG
+}
+
+"""
+Входные параметры для роли
+"""
+input RoleInput {
+  """
+  Уникальный идентифкатор
+  При отсутствии будет создан автоматически
+  """
+  id: ID @validate(constraint: "mongodb")
+  """
+  Название роли
+  """
+  title: String! @validate(constraint: "required,max=100,min=3")
+  """
+  Набор полномочий
+  """
+  permissions: [RolePermissionsEnum!]!
+    @validate(constraint: "required,dive,required")
+}
+
+extend type Query {
+  """
+  Получение списка ролей
+  """
+  roles(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+  ): RoleConnection! @auth
+
+  """
+  Получение роли по идентификатору
+  """
+  role(
+    """
+    Уникальный идентификатор роли
+    """
+    id: ID! @validate(constraint: "required,mongodb")
+  ): Role! @auth
+}
+
+extend type Mutation {
+  """
+  Сохранение роли
+  """
+  saveRole(
+    """
+    Информация о роли
+    """
+    input: RoleInput!
+  ): Boolean! @hasPermission(permission: "STAFF_SAVE_ROLE")
+
+  """
+  Удаление роли
+  """
+  deleteRole(
+    """
+    Уникальный идентификатор роли
+    """
+    id: ID!
+  ): Boolean! @hasPermission(permission: "STAFF_DELETE_ROLE")
+}

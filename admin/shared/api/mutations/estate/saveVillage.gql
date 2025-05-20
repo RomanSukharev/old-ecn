@@ -1,0 +1,3 @@
+mutation saveVillage($input: VillageInput!) {
+  saveVillage(input: $input)
+}

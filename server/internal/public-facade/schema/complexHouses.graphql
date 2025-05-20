@@ -1,0 +1,73 @@
+type ComplexHouse {
+  id: ID!
+
+  complex: Complex @goField(forceResolver: true)
+
+  title: String!
+  description: String!
+  address: String!
+  lat: Float
+  lon: Float
+  cadastrNumber: String
+  seoText: String
+  youtubeLink: String
+  tourLink: String
+
+  isReady: Boolean
+  readinessQuarter: QuarterEnum
+  readinessYear: Int
+
+  images: [Image!] @goField(forceResolver: true)
+  documents: [Document!] @goField(forceResolver: true)
+  projectDeclarations: [Document!] @goField(forceResolver: true)
+
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type ComplexHouseConnection {
+  totalCount: Int!
+  edges: [ComplexHouseEdge!]!
+  nodes: [ComplexHouse!]!
+  pageInfo: PageInfo!
+}
+
+type ComplexHouseEdge {
+  node: ComplexHouse!
+  cursor: Cursor!
+}
+
+input ComplexHouseFilter {
+  complexID: ID @validate(constraint: "mongodb")
+}
+
+extend type Query {
+  complexHouses(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "max=32")
+    """
+    Дополнительные параметры фильтрации
+    """
+    filter: ComplexHouseFilter
+  ): ComplexHouseConnection!
+
+  complexHouse(id: ID! @validate(constraint: "required,mongodb")): ComplexHouse!
+}

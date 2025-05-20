@@ -1,0 +1,97 @@
+"""
+Новость
+"""
+type Story {
+  """
+  Уникальный идентификатор
+  """
+  id: ID!
+  category: StoryCategoryEnum!
+  """
+  Название
+  """
+  title: String!
+  teaser: String
+  contentBlocks: [ContentBlock!]!
+  cover: Image
+  """
+  Дата и время создания
+  """
+  createdAt: Time!
+  """
+  Дата и время обновления
+  """
+  updatedAt: Time!
+}
+
+#
+# Выдача списочного результата
+#
+
+type StoryConnection {
+  totalCount: Int!
+  edges: [StoryEdge!]!
+  nodes: [Story!]!
+  pageInfo: PageInfo!
+}
+
+type StoryEdge {
+  node: Story!
+  cursor: Cursor!
+}
+
+"""
+Категория новости
+"""
+enum StoryCategoryEnum {
+  """
+  Новости
+  """
+  NEWS
+  """
+  Недвижимость
+  """
+  ESTATE
+  """
+  Жизнь компании
+  """
+  COMPANY
+}
+
+extend type Query {
+  """
+  Получение списка новостей
+  """
+  stories(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+  ): StoryConnection!
+
+  """
+  Получение новости по идентификатору
+  """
+  story(
+    """
+    Уникальный идентификатор
+    """
+    id: ID! @validate(constraint: "required,mongodb")
+  ): Story!
+}

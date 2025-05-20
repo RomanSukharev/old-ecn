@@ -1,0 +1,31 @@
+query pages(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $search: String
+  $sort: Sort
+) {
+  pages(
+    ids: $ids
+    start: $start
+    limit: $limit
+    search: $search
+    sort: $sort
+  ) {
+    totalCount
+    nodes {
+      id
+      url
+      title
+      description
+      contentBlocks {
+        type
+        data
+        isVisible
+      }
+      status
+      createdAt
+      updatedAt
+    }
+  }
+}

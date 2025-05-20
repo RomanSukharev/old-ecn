@@ -1,0 +1,3 @@
+mutation deleteMortgageRequest($id: ID!) {
+  deleteMortgageRequest(id: $id)
+}

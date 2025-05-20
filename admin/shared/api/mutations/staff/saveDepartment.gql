@@ -1,0 +1,3 @@
+mutation saveDepartment($input: DepartmentInput!) {
+  saveDepartment(input: $input)
+}

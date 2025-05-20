@@ -1,0 +1,11 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: fe-admin
+spec:
+  routes:
+    - match: Host(`ecn-admin.demo.pinkit.tech`)
+      kind: Rule
+      services:
+        - name: fe-admin
+          port: 3000

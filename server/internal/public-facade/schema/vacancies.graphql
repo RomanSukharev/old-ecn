@@ -1,0 +1,109 @@
+"""
+Вакансия
+"""
+type Vacancy {
+  """
+  Уникальный идентификатор
+  """
+  id: ID!
+  """
+  Название вакансии
+  """
+  title: String!
+  """
+  Описание вакансии
+  """
+  description: String!
+  """
+  Стаж
+  """
+  experience: String
+  """
+  Заработная плата
+  """
+  salary: String
+  """
+  График работы
+  """
+  schedule: VacancyScheduleEnum!
+  """
+  Статус вакансии
+  """
+  publicationStatus: PublicationStatusEnum!
+  """
+  Дата и время создания
+  """
+  createdAt: Time!
+  """
+  Дата и время обновления
+  """
+  updatedAt: Time!
+}
+
+#
+# Выдача списочного результата
+#
+
+type VacancyConnection {
+  totalCount: Int!
+  edges: [VacancyEdge!]!
+  nodes: [Vacancy!]!
+  pageInfo: PageInfo!
+}
+
+type VacancyEdge {
+  node: Vacancy!
+  cursor: Cursor!
+}
+
+"""
+График работы по вакансии
+"""
+enum VacancyScheduleEnum {
+  """
+  Полный день
+  """
+  FULL_TIME
+  """
+  Частичная занятость
+  """
+  PART_TIME
+}
+
+extend type Query {
+  """
+  Получение списка вакансий
+  """
+  vacancies(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+  ): VacancyConnection!
+
+  """
+  Получение вакансии по идентификатору
+  """
+  vacancy(
+    """
+    Уникальный идентификатор
+    """
+    id: ID! @validate(constraint: "required,mongodb")
+  ): Vacancy!
+}

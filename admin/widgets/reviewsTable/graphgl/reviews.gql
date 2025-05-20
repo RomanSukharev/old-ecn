@@ -1,0 +1,33 @@
+query reviews(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $search: String
+  $sort: Sort
+  $filter: ReviewsFilterInput
+) {
+  reviews(
+    ids: $ids
+    start: $start
+    limit: $limit
+    search: $search
+    sort: $sort
+    filter: $filter
+  ) {
+    totalCount
+    nodes {
+      id
+      employee {
+        id
+        name
+        surname
+      }
+      text
+      authorName
+      authorPhone
+      status
+      createdAt
+      updatedAt
+    }
+  }
+}

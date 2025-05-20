@@ -1,0 +1,47 @@
+query complexHouses(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $sort: Sort
+  $search: String
+  $filter: ComplexHouseFilter
+) {
+  complexHouses(
+    ids: $ids
+    start: $start
+    limit: $limit
+    sort: $sort
+    search: $search
+    filter: $filter
+  ) {
+    totalCount
+    nodes {
+      id
+
+      complex {
+        id
+        title
+      }
+
+      title
+      description
+      address
+      lat
+      lon
+      cadastrNumber
+
+      isReady
+      readinessQuarter
+      readinessYear
+
+      images {
+        id
+        url
+        title
+      }
+
+      createdAt
+      updatedAt
+    }
+  }
+}

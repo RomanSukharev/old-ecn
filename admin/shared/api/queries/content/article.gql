@@ -1,0 +1,22 @@
+query article($id: ID!) {
+  article(id: $id) {
+    id
+    group {
+      id
+      title
+    }
+    title
+    contentBlocks {
+      type
+      data
+      isVisible
+    }
+    status
+    cover {
+      id
+      url
+    }
+    createdAt
+    updatedAt
+  }
+}

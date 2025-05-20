@@ -1,0 +1,3 @@
+mutation bulkDeleteMeets($ids: [ID!]!) {
+  bulkDeleteMeets(ids: $ids)
+}

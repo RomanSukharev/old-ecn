@@ -1,0 +1,21 @@
+query positions(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $search: String
+  $sort: Sort
+) {
+  positions(
+    ids: $ids
+    start: $start
+    limit: $limit
+    search: $search
+    sort: $sort
+  ) {
+    totalCount
+    nodes {
+      id
+      title
+    }
+  }
+}

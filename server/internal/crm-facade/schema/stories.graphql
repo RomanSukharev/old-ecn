@@ -1,0 +1,157 @@
+"""
+Новость
+"""
+type Story {
+  """
+  Уникальный идентификатор
+  """
+  id: ID!
+  category: StoryCategoryEnum!
+  """
+  Название
+  """
+  title: String!
+  teaser: String
+  contentBlocks: [ContentBlock!]!
+  cover: Image
+  status: PublicationStatusEnum!
+  """
+  Дата и время создания
+  """
+  createdAt: Time!
+  """
+  Дата и время обновления
+  """
+  updatedAt: Time!
+}
+
+#
+# Выдача списочного результата
+#
+
+type StoryConnection {
+  totalCount: Int!
+  edges: [StoryEdge!]!
+  nodes: [Story!]!
+  pageInfo: PageInfo!
+}
+
+type StoryEdge {
+  node: Story!
+  cursor: Cursor!
+}
+
+input StoryFilterInput {
+  category: StoryCategoryEnum
+  publicationStatus: PublicationStatusEnum
+}
+
+"""
+Входные параметры для новости
+"""
+input StoryInput {
+  """
+  Уникальный идентификатор
+  При отсутствии будет создан автоматически
+  """
+  id: ID @validate(constraint: "mongodb")
+  """
+  Категория
+  """
+  category: StoryCategoryEnum! @validate(constraint: "required")
+  """
+  Название
+  """
+  title: String! @validate(constraint: "required,max=100,min=3")
+  """
+  Тизер
+  """
+  teaser: String @validate(constraint: "max=100,min=3")
+  """
+  Текст
+  """
+  contentBlocks: [ContentBlockInput!]! @validate(constraint: "required")
+  """
+  Основное изображение (обложка)
+  """
+  cover: ImageInput
+}
+
+"""
+Категория новости
+"""
+enum StoryCategoryEnum {
+  """
+  Новости
+  """
+  NEWS
+  """
+  Недвижимость
+  """
+  ESTATE
+  """
+  Жизнь компании
+  """
+  COMPANY
+}
+
+extend type Query {
+  """
+  Получение списка новостей
+  """
+  stories(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+    filter: StoryFilterInput
+  ): StoryConnection! @auth
+
+  """
+  Получение новости по идентификатору
+  """
+  story(
+    """
+    Уникальный идентификатор
+    """
+    id: ID! @validate(constraint: "required,mongodb")
+  ): Story! @auth
+}
+
+extend type Mutation {
+  """
+  Сохранение новости
+  """
+  saveStory(
+    """
+    Информация о новости
+    """
+    input: StoryInput!
+  ): Boolean! @hasPermission(permission: "CONTENT_SAVE_STORY")
+
+  """
+  Удаление новости
+  """
+  deleteStory(
+    """
+    Уникальный идентификатор
+    """
+    id: ID!
+  ): Boolean! @hasPermission(permission: "CONTENT_DELETE_STORY")
+}

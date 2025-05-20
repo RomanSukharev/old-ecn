@@ -1,0 +1,3 @@
+mutation bulkDeclineProperties($ids: [ID!]!) {
+  bulkDeclineProperties(ids: $ids)
+}

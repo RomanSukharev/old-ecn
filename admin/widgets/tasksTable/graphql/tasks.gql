@@ -1,0 +1,68 @@
+query tasks(
+  $ids: [ID!]
+  $start: Int
+  $limit: Int
+  $sort: Sort
+  $search: String
+  $filter: TaskFilter
+) {
+  tasks(
+    ids: $ids
+    start: $start
+    limit: $limit
+    sort: $sort
+    search: $search
+    filter: $filter
+  ) {
+    totalCount
+    nodes {
+      id
+      assignee {
+        id
+        name
+        surname
+        patronymic
+      }
+      internalNumber
+      isCompleted
+      isDeleted
+      isHot
+      lead {
+        id
+        name
+        surname
+        patronymic
+      }
+      property {
+        id
+        title
+      }
+      reporter {
+        id
+        name
+        surname
+        patronymic
+      }
+      startDate
+      tag
+      title
+      contact {
+        id
+        name
+        surname
+        patronymic
+      }
+      updatedAt
+      contactPhone
+      createdAt
+      deal {
+        id
+        internalNumber
+      }
+      details
+      durationDays
+      durationHours
+      endDate
+    }
+  }
+}

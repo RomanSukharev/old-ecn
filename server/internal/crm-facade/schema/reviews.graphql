@@ -1,0 +1,218 @@
+"""
+Отзыв
+"""
+type Review {
+  """
+  Уникальный идентификатор
+  """
+  id: ID!
+  """
+  Сотрудник
+  """
+  employee: Employee @goField(forceResolver: true)
+  """
+  Текст отзыва
+  """
+  text: String!
+  """
+  Имя автора
+  """
+  authorName: String!
+  """
+  Номер телефона автора
+  """
+  authorPhone: String!
+  """
+  Статус отзыва
+  """
+  status: ReviewStatusEnum!
+  """
+  Статус публикации
+  """
+  publicationStatus: PublicationStatusEnum!
+  """
+  Дата и время создания
+  """
+  createdAt: Time!
+  """
+  Дата и время обновления
+  """
+  updatedAt: Time!
+}
+
+#
+# Выдача списочного результата
+#
+
+type ReviewConnection {
+  totalCount: Int!
+  edges: [ReviewEdge!]!
+  nodes: [Review!]!
+  pageInfo: PageInfo!
+}
+
+type ReviewEdge {
+  node: Review!
+  cursor: Cursor!
+}
+
+"""
+Расширенный фильтр по отзывам
+"""
+input ReviewsFilterInput {
+  """
+  Набор статусов для фильтрации
+  """
+  status: ReviewStatusEnum
+  """
+  Набор статусов для фильтрации
+  """
+  publicationStatus: PublicationStatusEnum
+  """
+  Набор идентфикаторов сотрудников для фильтрации
+  """
+  employeeID: ID @validate(constraint: "mongodb")
+}
+
+"""
+Входные параметры для обновления вакансии
+"""
+input ReviewInput {
+  """
+  Уникальный идентификатор
+  При отсутствии будет создан автоматически
+  """
+  id: ID @validate(constraint: "mongodb")
+  """
+  Идентификатор сотрудника
+  """
+  employeeID: ID! @validate(constraint: "required,mongodb")
+  """
+  Текст отзыва
+  """
+  text: String! @validate(constraint: "required,max=100,min=3")
+  """
+  Имя автора
+  """
+  authorName: String! @validate(constraint: "required,max=100,min=3")
+  """
+  Номер телефона автора
+  """
+  authorPhone: String! @validate(constraint: "required,max=100,min=3")
+  """
+  Статус отзыва
+  """
+  status: ReviewStatusEnum! @validate(constraint: "required")
+}
+
+"""
+Статус отзыва
+"""
+enum ReviewStatusEnum {
+  """
+  Новый
+  """
+  NEW
+  """
+  Подтверждён
+  """
+  APPROVED
+  """
+  Отклонён
+  """
+  DECLINED
+}
+
+extend type Query {
+  """
+  Получение списка отзывов
+  """
+  reviews(
+    """
+    Перечень идентификаторов для ограничения выборки
+    """
+    ids: [ID!] @validate(constraint: "dive,required,mongodb")
+    """
+    Начало для постраничной навигации
+    """
+    start: Int @validate(constraint: "number,gte=0")
+    """
+    Количество элементов для постраничной навигации
+    """
+    limit: Int @validate(constraint: "number,gte=1")
+    """
+    Режим сортировки
+    """
+    sort: Sort
+    """
+    Ключевые слова для полнотекстового поиска
+    """
+    search: String @validate(constraint: "min=3,max=32")
+    """
+    Расширенный фильтр
+    """
+    filter: ReviewsFilterInput
+  ): ReviewConnection! @auth
+
+  """
+  Получение отзыва по идентификатору
+  """
+  review(
+    """
+    Уникальный идентификатор
+    """
+    id: ID! @validate(constraint: "required,mongodb")
+  ): Review! @auth
+}
+
+extend type Mutation {
+  """
+  Сохранение отзыва
+  """
+  saveReview(
+    """
+    Информация об отзыве
+    """
+    input: ReviewInput!
+  ): Boolean! @hasPermission(permission: "CONTENT_SAVE_REVIEW")
+
+  """
+  Удаление отзыва
+  """
+  deleteReview(
+    """
+    Уникальный идентификатор
+    """
+    id: ID!
+  ): Boolean! @hasPermission(permission: "CONTENT_DELETE_REVIEW")
+
+  """
+  Массовое подтверждение отзывов
+  """
+  bulkApproveReviews(
+    """
+    Массив уникальных идентификаторов
+    """
+    ids: [ID!]!
+  ): Boolean! @hasPermission(permission: "CONTENT_SAVE_REVIEW")
+
+  """
+  Массовое отклонение отзывов
+  """
+  bulkDeclineReviews(
+    """
+    Массив уникальных идентификаторов
+    """
+    ids: [ID!]!
+  ): Boolean! @hasPermission(permission: "CONTENT_SAVE_REVIEW")
+
+  """
+  Массовое удаление отзывов
+  """
+  bulkDeleteReviews(
+    """
+    Массив уникальных идентификаторов
+    """
+    ids: [ID!]!
+  ): Boolean! @hasPermission(permission: "CONTENT_DELETE_REVIEW")
+}

@@ -1,0 +1,16 @@
+query employees {
+  employees {
+    nodes {
+      id
+      name
+      surname
+      avatar {
+        url
+      }
+      publicImage {
+        url
+      }
+      shortDescription
+    }
+  }
+}

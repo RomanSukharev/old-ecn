@@ -1,0 +1,41 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: public-gql-facade
+  labels:
+    app: public-gql-facade
+  annotations:
+    link.argocd.argoproj.io/external-link: https://ecn-public-server.dev.pinkit.tech/
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: public-gql-facade
+  template:
+    metadata:
+      labels:
+        app: public-gql-facade
+    spec:
+      containers:
+        - name: public-gql-facade
+          image: backend
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: public-gql-facade-env
+            - secretRef:
+                name: config
+          command: ["/public-facade-service"]
+          ports:
+            - name: web
+              containerPort: 8000
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "25m"
+            limits:
+              memory: "64Mi"
+              cpu: "50m"
+      imagePullSecrets:
+        - name: selcloud

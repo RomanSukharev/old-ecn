@@ -1,0 +1,3 @@
+mutation bulkApproveProperties($ids: [ID!]!) {
+  bulkApproveProperties(ids: $ids)
+}

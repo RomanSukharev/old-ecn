@@ -1,0 +1,3 @@
+mutation deleteVillage($id: ID!) {
+  deleteVillage(id: $id)
+}
